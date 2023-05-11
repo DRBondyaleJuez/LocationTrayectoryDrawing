@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class LocationController implements LocationControllerObservable {
 
-    private static final int INTERVAL_MILLIS = 10000;
+    private static final int INTERVAL_MILLIS = 100;
     private final Activity activity;
     private final LocationRequest locationRequest;
     private final LocationCallback locationCallback;

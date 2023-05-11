@@ -10,9 +10,12 @@ import viewController.MainControllerObserver;
 public class MainController implements LocationControllerObserver, MainControllerObservable {
     private static final double DEFAULT_ALTITUDE = -2000;
     private static final float DEFAULT_SPEED = -1;
+    private static final int BUFFER_SIZE_FOR_MEAN = 1git ;
     private final LocationController locationController;
     private final ArrayList<Double> latitudes;
+    private ArrayList<Double> bufferLatitudes;
     private final ArrayList<Double> longitudes;
+    private ArrayList<Double> bufferLongitudes;
     private final ArrayList<Double> altitudes;
     private final ArrayList<Float> speeds;
     int amountOfDataInDisplay = 10;
@@ -21,7 +24,9 @@ public class MainController implements LocationControllerObserver, MainControlle
 
     public MainController(LocationController locationController) {
         latitudes = new ArrayList<>();
+        bufferLatitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
+        bufferLongitudes = new ArrayList<>();
         altitudes = new ArrayList<>();
         speeds = new ArrayList<>();
         observers = new ArrayList<>();
@@ -43,8 +48,6 @@ public class MainController implements LocationControllerObserver, MainControlle
     public void stopContinuousUpdateLocation() {
         locationController.stopContinuousLocationUpdate();
     }
-
-
 
 
     private String buildDoubleListString(ArrayList<Double> dataList){
@@ -86,8 +89,8 @@ public class MainController implements LocationControllerObserver, MainControlle
 
     @Override
     public void setLocationParameters(double currentLatitude, double currentLongitude, Double currentAltitude, Float currentSpeed){
-        latitudes.add(currentLatitude);
-        longitudes.add(currentLongitude);
+        bufferLatitudes.add(currentLatitude);
+        bufferLongitudes.add(currentLongitude);
         if(currentAltitude == null){
             currentAltitude= DEFAULT_ALTITUDE;
         }
@@ -97,6 +100,29 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
         speeds.add(currentSpeed);
 
+
+        if(bufferLatitudes.size() == BUFFER_SIZE_FOR_MEAN && bufferLongitudes.size() == BUFFER_SIZE_FOR_MEAN){
+
+            double latSum = 0;
+            for (double lat:bufferLatitudes) {
+                latSum += lat;
+            }
+            latitudes.add(latSum/BUFFER_SIZE_FOR_MEAN);
+            bufferLatitudes.clear();
+
+            double lonSum = 0;
+            for (double lon:bufferLongitudes) {
+                lonSum += lon;
+            }
+            longitudes.add(lonSum/BUFFER_SIZE_FOR_MEAN);
+            bufferLongitudes.clear();
+
+            sendLocationInformation();
+        }
+
+    }
+
+    private void sendLocationInformation(){
         //CALLING OBSERVERS
         for (MainControllerObserver observer: observers) {
 
