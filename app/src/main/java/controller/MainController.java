@@ -10,7 +10,7 @@ import viewController.MainControllerObserver;
 public class MainController implements LocationControllerObserver, MainControllerObservable {
     private static final double DEFAULT_ALTITUDE = -2000;
     private static final float DEFAULT_SPEED = -1;
-    private static final int BUFFER_SIZE_FOR_MEAN = 1git ;
+    private static final int BUFFER_SIZE_FOR_MEAN = 1;
     private final LocationController locationController;
     private final ArrayList<Double> latitudes;
     private ArrayList<Double> bufferLatitudes;
@@ -62,7 +62,6 @@ public class MainController implements LocationControllerObserver, MainControlle
                 dataListString = dataListString.concat(dataList.get(currentIndex).toString() + "\n");
             }
         }
-
         return dataListString;
     }
 
@@ -78,7 +77,6 @@ public class MainController implements LocationControllerObserver, MainControlle
                 dataListString = dataListString.concat(dataList.get(currentIndex).toString() + "\n");
             }
         }
-
         return dataListString;
     }
 
@@ -119,7 +117,6 @@ public class MainController implements LocationControllerObserver, MainControlle
 
             sendLocationInformation();
         }
-
     }
 
     private void sendLocationInformation(){
