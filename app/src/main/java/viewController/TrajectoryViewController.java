@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 
 public class TrajectoryViewController {
+
+    private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
     private static int BITMAP_SIZE = 5000;
     private static int SQUARE_SIZE = 50;
     private static int ADJUSTED_BITMAP_SIZE = BITMAP_SIZE-SQUARE_SIZE;
@@ -40,8 +42,14 @@ public class TrajectoryViewController {
                 yCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
             } else {
 
-            xCoordinatesInBitmap[i] = (int)((((latitudes.get(i) - latitudes.get(0))/previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE/2);
-            yCoordinatesInBitmap[i] = (int)((((longitudes.get(i) - longitudes.get(0))/previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE/2);
+                if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE) {
+                    xCoordinatesInBitmap[i] = (int) ((((latitudes.get(i) - latitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                    yCoordinatesInBitmap[i] = (int) ((((longitudes.get(i) - longitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                } else {
+                    xCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+                    yCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+
+                }
             }
 
         }
@@ -74,6 +82,7 @@ public class TrajectoryViewController {
 
         if(xCoordinates.length > 1) {
             for (int i = 0; i < xCoordinates.length - 1; i++) {
+                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
 
                 float[] hsv ={hueUnit*i,100,100};
                 Paint yellow = new Paint();

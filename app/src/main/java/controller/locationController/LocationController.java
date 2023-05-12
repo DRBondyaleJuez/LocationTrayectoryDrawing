@@ -1,4 +1,4 @@
-package controller;
+package controller.locationController;
 
 import android.Manifest;
 import android.app.Activity;
@@ -93,8 +93,6 @@ public class LocationController implements LocationControllerObservable {
         return new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-
-                //TODO: Send location values to controller or store them or something
                 updateLocationInfo(location);
             }
         };
