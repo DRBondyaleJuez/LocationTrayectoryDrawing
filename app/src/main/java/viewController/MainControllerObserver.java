@@ -1,6 +1,9 @@
 package viewController;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import controller.directionCalculator.DirectionEnum;
 
 public interface MainControllerObserver {
 
@@ -8,4 +11,5 @@ public interface MainControllerObserver {
 
     void setTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes);
 
+    void setDirection(List<DirectionEnum> subList);
 }

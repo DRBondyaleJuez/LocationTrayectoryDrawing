@@ -1,7 +1,6 @@
 package viewController;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,8 +11,10 @@ import android.widget.Toast;
 import com.locationtrayectorydrawing.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import controller.LocationController;
+import controller.directionCalculator.DirectionEnum;
+import controller.locationController.LocationController;
 import controller.MainController;
 
 public class MainViewController implements MainControllerObserver {
@@ -24,6 +25,7 @@ public class MainViewController implements MainControllerObserver {
     //ViewComponents
     private TextView latitudeTextView;
     private TextView longitudeTextView;
+    private TextView directionsTextView;
     private final Button locationFinderButtonOnce;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
@@ -39,6 +41,7 @@ public class MainViewController implements MainControllerObserver {
         //Initializing and setting View components associated to view elements
         latitudeTextView = activity.findViewById(R.id.latitudeTextView);
         longitudeTextView = activity.findViewById(R.id.longitudeTextView);
+        directionsTextView = activity.findViewById(R.id.directionTextView);
         locationFinderButtonOnce = activity.findViewById(R.id.locationFinderButtonOnce);
         locationFinderButtonOnce.setOnClickListener(setOnClickLocationFinder());
         continuousLocationSwitch = activity.findViewById(R.id.continuousLocationSwitch);
@@ -98,5 +101,14 @@ public class MainViewController implements MainControllerObserver {
     @Override
     public void setTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
         trajectoryImageView.setImageBitmap(trajectoryViewController.getTrajectory(latitudes,longitudes));
+    }
+
+    @Override
+    public void setDirection(List<DirectionEnum> directionList) {
+        StringBuilder directionsString = new StringBuilder();
+        for (DirectionEnum directionEnum:directionList) {
+            directionsString.append(directionEnum.getSymbol() + "  ||  ");
+        }
+        directionsTextView.setText(directionsString);
     }
 }
