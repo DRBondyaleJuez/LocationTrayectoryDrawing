@@ -9,16 +9,17 @@ public class DirectionCalculator {
     private static final int NUMBER_OF_POINTS_PER_TRAJECTORY = 3;
     private static final double LATITUDE_SUFFICIENT_CHANGE = 0.0005;
     private static final double LONGITUDE_SUFFICIENT_CHANGE = 0.0005;
-    private double[][] initialTrajectory;
-    private double[][] previousTrajectory;
+    private static final double VECTOR_MODULE_SUFFICIENT_CHANGE = 0.0005;
+    private DirectionalVector initialTrajectory;
+    private DirectionalVector previousTrajectory;
     private ArrayList<DirectionEnum> directions;
 
-    public DirectionCalculator(double[][] initialTrajectory) {
-        this.initialTrajectory = initialTrajectory;
-        previousTrajectory = initialTrajectory;
+    public DirectionCalculator(DirectionalVector initialTrajectoryVector) {
+        this.initialTrajectory = initialTrajectoryVector;
+        previousTrajectory = initialTrajectoryVector;
         directions = new ArrayList<>();
         directions.add(DirectionEnum.FRONT);
-        if(checkIfStop(initialTrajectory)){
+        if(checkIfStop(initialTrajectoryVector)){
             directions.add(0,DirectionEnum.STOP);
         }
     }
@@ -35,47 +36,38 @@ public class DirectionCalculator {
         return directions.get(directions.size()-1);
     }
 
-    public void restart(double[][] newInitialTrajectory){
-        initialTrajectory = newInitialTrajectory;
-        directions.clear();
-        directions.add(DirectionEnum.FRONT);
+
+    public DirectionEnum calculateDirection(DirectionalVector currentTrajectoryVector){
+
+        if(checkIfStop(currentTrajectoryVector)) return DirectionEnum.STOP;
+
+        if(initialTrajectory.equals(previousTrajectory)) return DirectionEnum.FRONT;
+
+        if(checkIfStop(initialTrajectory)) restart(currentTrajectoryVector);
+
+        return determineDirectionBasedOnAngle(currentTrajectoryVector);
     }
 
-    public DirectionEnum calculateDirection(double[][] currentTrajectory){
+    private DirectionEnum determineDirectionBasedOnAngle(DirectionalVector currentTrajectoryVector) {
 
-        if(checkIfStop(currentTrajectory)) return DirectionEnum.STOP;
+        double angleBetweenInitialAndCurrentTrajectoryVector = initialTrajectory.calculateAngle(currentTrajectoryVector);
 
-        if(Arrays.deepEquals(initialTrajectory, previousTrajectory)) return DirectionEnum.FRONT;
+        if(angleBetweenInitialAndCurrentTrajectoryVector < Math.PI/4) return DirectionEnum.FRONT;
 
-        if(checkIfStop(initialTrajectory)){
-            restart(currentTrajectory);
-        } else {
-            if(isSameAsPrevious(currentTrajectory)) return DirectionEnum.STOP;
-        }
+        if(angleBetweenInitialAndCurrentTrajectoryVector > Math.PI*3/4) return DirectionEnum.BACK;
 
-        return DirectionEnum.FRONT;
+        double crossProductZComponent = initialTrajectory.calculateCrossProductZComponent(currentTrajectoryVector);
+
+        if(crossProductZComponent < 0) return DirectionEnum.RIGHT;
+
+        if(crossProductZComponent > 0) return DirectionEnum.LEFT;
+
+        return DirectionEnum.STOP;
     }
 
-    private boolean isSameAsPrevious(double[][] currentTrajectory) {
-        double[] previousAverage = averageTrajectory(previousTrajectory);
-        double[] currentAverage = averageTrajectory(currentTrajectory);
-        if(Math.abs(previousAverage[0] - currentAverage[0]) > LATITUDE_SUFFICIENT_CHANGE || Math.abs(previousAverage[1] - currentAverage[1]) > LONGITUDE_SUFFICIENT_CHANGE){
-            return false;
-        } else {
-            return true;
-        }
-    }
 
-    private boolean checkIfStop(double[][] trajectory){
-
-        if(Math.abs(trajectory[0][0] - trajectory[1][0]) > LATITUDE_SUFFICIENT_CHANGE || Math.abs(trajectory[0][0] - trajectory[2][0]) > LATITUDE_SUFFICIENT_CHANGE || Math.abs(trajectory[1][0] - trajectory[2][0]) > LATITUDE_SUFFICIENT_CHANGE){
-            return false;
-        }
-        if(Math.abs(trajectory[0][1] - trajectory[1][1]) > LONGITUDE_SUFFICIENT_CHANGE || Math.abs(trajectory[0][1] - trajectory[2][1]) > LONGITUDE_SUFFICIENT_CHANGE|| Math.abs(trajectory[1][1] - trajectory[2][1]) > LONGITUDE_SUFFICIENT_CHANGE){
-            return false;
-        }
-
-        return true;
+    private boolean checkIfStop(DirectionalVector trajectoryVector){
+        return trajectoryVector.getModule() <= VECTOR_MODULE_SUFFICIENT_CHANGE;
     }
 
     private double[] averageTrajectory(double[][] trajectory){
@@ -85,6 +77,12 @@ public class DirectionCalculator {
             average[1] = average[1] + location[1]/NUMBER_OF_POINTS_PER_TRAJECTORY;
         }
         return average;
+    }
+
+    private void restart(DirectionalVector newInitialTrajectoryVector){
+        initialTrajectory = newInitialTrajectoryVector;
+        directions.clear();
+        directions.add(DirectionEnum.FRONT);
     }
 
 

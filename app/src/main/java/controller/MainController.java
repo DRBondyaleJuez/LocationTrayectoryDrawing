@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controller.directionCalculator.DirectionCalculator;
 import controller.directionCalculator.DirectionEnum;
+import controller.directionCalculator.DirectionalVector;
 import controller.locationController.LocationController;
 import controller.locationController.LocationControllerObserver;
 import viewController.MainControllerObservable;
@@ -137,17 +138,18 @@ public class MainController implements LocationControllerObserver, MainControlle
 
         if(directionsBuffer.size() > NUMBER_OF_POINTS_PER_TRAJECTORY){
 
-            double[][] trajectory = new double[3][2];
+            double[][] trajectory = new double[NUMBER_OF_POINTS_PER_TRAJECTORY][2];
             for (int i = 0; i < NUMBER_OF_POINTS_PER_TRAJECTORY; i++) {
                 trajectory[i] = directionsBuffer.get(i);
             }
+            DirectionalVector currentDirectionalVector = new DirectionalVector(trajectory);
 
             DirectionEnum currentDirection;
-            if(latitudes.size() < NUMBER_OF_POINTS_PER_TRAJECTORY+1){
-                directionCalculator = new DirectionCalculator(trajectory);
+            if(directionCalculator == null){
+                directionCalculator = new DirectionCalculator(currentDirectionalVector);
                 currentDirection = directionCalculator.getLastDirection();
             } else {
-                currentDirection = directionCalculator.calculateDirection(trajectory);
+                currentDirection = directionCalculator.calculateDirection(currentDirectionalVector);
             }
             directions.add(currentDirection);
             directionsBuffer.clear();
