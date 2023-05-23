@@ -114,6 +114,7 @@ public class LocationController implements LocationControllerObservable {
         //CALLING OBSERVERS
         for (LocationControllerObserver observer : observers) {
             observer.setLocationParameters(lat, lon, alt, speed);
+            observer.calculateAndSetDirection(lat,lon);
         }
     }
 

@@ -109,7 +109,29 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
         speeds.add(currentSpeed);
 
-        //DIRECTION ARROW OPERATIONS
+        //LOCATION OPERATIONS
+        if(bufferLatitudes.size() == BUFFER_SIZE_FOR_MEAN && bufferLongitudes.size() == BUFFER_SIZE_FOR_MEAN){
+
+            double latSum = 0;
+            for (double lat:bufferLatitudes) {
+                latSum += lat;
+            }
+            latitudes.add(latSum/BUFFER_SIZE_FOR_MEAN);
+            bufferLatitudes.clear();
+
+            double lonSum = 0;
+            for (double lon:bufferLongitudes) {
+                lonSum += lon;
+            }
+            longitudes.add(lonSum/BUFFER_SIZE_FOR_MEAN);
+            bufferLongitudes.clear();
+
+            sendLocationInformation();
+        }
+    }
+
+    @Override
+    public void calculateAndSetDirection(double currentLatitude, double currentLongitude){
         double[] newLocation = {currentLatitude,currentLongitude};
         directionsBuffer.add(newLocation);
 
@@ -131,26 +153,6 @@ public class MainController implements LocationControllerObserver, MainControlle
             directionsBuffer.clear();
             System.out.println(currentDirection);
             sendDirectionInformation();
-        }
-
-        //LOCATION OPERATIONS
-        if(bufferLatitudes.size() == BUFFER_SIZE_FOR_MEAN && bufferLongitudes.size() == BUFFER_SIZE_FOR_MEAN){
-
-            double latSum = 0;
-            for (double lat:bufferLatitudes) {
-                latSum += lat;
-            }
-            latitudes.add(latSum/BUFFER_SIZE_FOR_MEAN);
-            bufferLatitudes.clear();
-
-            double lonSum = 0;
-            for (double lon:bufferLongitudes) {
-                lonSum += lon;
-            }
-            longitudes.add(lonSum/BUFFER_SIZE_FOR_MEAN);
-            bufferLongitudes.clear();
-
-            sendLocationInformation();
         }
     }
 
@@ -175,8 +177,6 @@ public class MainController implements LocationControllerObserver, MainControlle
             } else {
                 observer.setDirection(directions.subList(directions.size()-AMOUNT_OF_DATA_IN_DISPLAY,directions.size()-1));
             }
-
-
         }
     }
 }

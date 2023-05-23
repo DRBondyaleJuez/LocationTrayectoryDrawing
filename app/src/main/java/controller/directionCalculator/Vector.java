@@ -9,9 +9,7 @@ public class Vector {
 
     public Vector(double[][] trajectory) {
 
-
-
-        double module = Math.sqrt(x*x + y*y);
+        module = Math.sqrt(x*x + y*y);
 
     }
 
