@@ -27,7 +27,6 @@ public class MainViewController implements MainControllerObserver {
     private TextView latitudeTextView;
     private TextView longitudeTextView;
     private TextView directionsTextView;
-    private final Button locationFinderButtonOnce;
     private final Button saveDataButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
@@ -44,8 +43,6 @@ public class MainViewController implements MainControllerObserver {
         latitudeTextView = activity.findViewById(R.id.latitudeTextView);
         longitudeTextView = activity.findViewById(R.id.longitudeTextView);
         directionsTextView = activity.findViewById(R.id.directionTextView);
-        locationFinderButtonOnce = activity.findViewById(R.id.locationFinderButtonOnce);
-        locationFinderButtonOnce.setOnClickListener(setOnClickLocationFinder());
         continuousLocationSwitch = activity.findViewById(R.id.continuousLocationSwitch);
         continuousLocationSwitch.setOnClickListener(setOnClickContinuousLocationFinder());
         saveDataButton = activity.findViewById(R.id.saveDataButton);
@@ -97,17 +94,6 @@ public class MainViewController implements MainControllerObserver {
         longitudeTextView.setText(" -- ");
     }
 
-
-    private View.OnClickListener setOnClickLocationFinder() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(activity, "Obtaining location data once.", Toast.LENGTH_LONG).show();
-
-                controller.updateLocation();
-            }
-        };
-    }
 
     @Override
     public void setLocationParameters(String currentLatitudes, String currentLongitudes, String currentAltitudes, String currentSpeeds){

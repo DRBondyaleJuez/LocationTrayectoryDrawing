@@ -1,6 +1,12 @@
 package controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Date;
 
 import controller.directionCalculator.DirectionCalculator;
 import controller.directionCalculator.DirectionEnum;
@@ -76,8 +82,17 @@ public class MainController implements LocationControllerObserver, MainControlle
     public boolean saveData(){
         if(latitudes.size() < 1 || directions.size() < 1) return false;
 
-        String filename = "";
+        //Creating the name of the file
+        DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        Date date = new Date();
+        String currentDateTime = dateFormat.format(date);
+        String filename = "Trajectory_at_" + currentDateTime + ".txt";
+
+        //Formatting the data for storage
         String data = "";
+        for (int i = 0; i < latitudes.size(); i++) {
+            data = data + latitudes.get(i) + ";" + longitudes.get(i) + "\n";
+        }
         return persistenceManager.saveData(filename,data);
     }
 
