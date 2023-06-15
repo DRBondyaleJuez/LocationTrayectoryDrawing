@@ -135,7 +135,7 @@ public class MainController implements LocationControllerObserver, MainControlle
         double[] newLocation = {currentLatitude,currentLongitude};
         directionsBuffer.add(newLocation);
 
-        if(directionsBuffer.size() > NUMBER_OF_POINTS_PER_TRAJECTORY){
+        if(directionsBuffer.size() == NUMBER_OF_POINTS_PER_TRAJECTORY){
 
             double[][] trajectory = new double[NUMBER_OF_POINTS_PER_TRAJECTORY][2];
             for (int i = 0; i < NUMBER_OF_POINTS_PER_TRAJECTORY; i++) {
@@ -152,7 +152,7 @@ public class MainController implements LocationControllerObserver, MainControlle
             }
             directions.add(currentDirection);
             directionsBuffer.clear();
-            System.out.println(currentDirection);
+            System.out.println("============================ Current Direction: " + currentDirection);
             sendDirectionInformation();
         }
     }
@@ -174,7 +174,8 @@ public class MainController implements LocationControllerObserver, MainControlle
         for (MainControllerObserver observer: observers) {
 
             if(directions.size() < AMOUNT_OF_DATA_IN_DISPLAY){
-                observer.setDirection(directions.subList(0,directions.size()-1));
+                //observer.setDirection(directions.subList(0,directions.size()-1));
+                observer.setDirection(directions.subList(0,directions.size()));
             } else {
                 observer.setDirection(directions.subList(directions.size()-AMOUNT_OF_DATA_IN_DISPLAY,directions.size()-1));
             }
