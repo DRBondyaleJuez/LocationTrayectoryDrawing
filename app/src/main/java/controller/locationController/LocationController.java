@@ -6,6 +6,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -97,7 +98,8 @@ public class LocationController implements LocationControllerObservable {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        //fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
     public void stopContinuousLocationUpdate() {
@@ -110,6 +112,10 @@ public class LocationController implements LocationControllerObservable {
                 INTERVAL_MILLIS
         ).setGranularity(Granularity.GRANULARITY_FINE)
          .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+         //.setMinUpdateDistanceMeters(100)
+                //.setMinUpdateIntervalMillis(100)
+                //.setMaxUpdateDelayMillis(500)
+                //.setIntervalMillis(100) //There is probably a time limit to how fast the GPS updates location https://stackoverflow.com/questions/64117840/how-to-make-locationmanager-get-very-frequent-location-updates
          .build());
     }
 
