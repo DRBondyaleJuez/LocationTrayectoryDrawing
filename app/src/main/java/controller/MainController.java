@@ -7,15 +7,25 @@ import controller.directionCalculator.DirectionEnum;
 import controller.directionCalculator.DirectionalVector;
 import controller.locationController.LocationController;
 import controller.locationController.LocationControllerObserver;
+import persistence.PersistenceManager;
 import viewController.MainControllerObservable;
 import viewController.MainControllerObserver;
 
 public class MainController implements LocationControllerObserver, MainControllerObservable {
+
+    //CONSTANTS
     private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
     private static final float DEFAULT_SPEED = -1;
     private static final int BUFFER_SIZE_FOR_MEAN = 1;
     private static final int NUMBER_OF_POINTS_PER_TRAJECTORY = 3;
+    private static final int AMOUNT_OF_DATA_IN_DISPLAY = 10;
+
+    //COMPLMENTARY CONTROLLERS
     private final LocationController locationController;
+    private DirectionCalculator directionCalculator;
+    private final PersistenceManager persistenceManager;
+
+    //LISTS OF DATA
     private final ArrayList<Double> latitudes;
     private ArrayList<Double> bufferLatitudes;
     private final ArrayList<Double> longitudes;
@@ -23,13 +33,18 @@ public class MainController implements LocationControllerObserver, MainControlle
     private ArrayList<double[]> directionsBuffer;
     private final ArrayList<Double> altitudes;
     private final ArrayList<Float> speeds;
-    private static final int AMOUNT_OF_DATA_IN_DISPLAY = 10;
-    private DirectionCalculator directionCalculator;
     private ArrayList<DirectionEnum> directions;
 
+    //OBSERVERS
     private ArrayList<MainControllerObserver> observers;
 
-    public MainController(LocationController locationController) {
+    public MainController(LocationController locationController , PersistenceManager persistenceManager) {
+        this.locationController = locationController;
+        locationController.addObservers(this);
+        locationController.updateGPS();
+
+        this.persistenceManager = persistenceManager;
+
         latitudes = new ArrayList<>();
         bufferLatitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
@@ -37,9 +52,6 @@ public class MainController implements LocationControllerObserver, MainControlle
         altitudes = new ArrayList<>();
         speeds = new ArrayList<>();
         observers = new ArrayList<>();
-        this.locationController = locationController;
-        locationController.addObservers(this);
-        locationController.updateGPS();
 
         directionsBuffer = new ArrayList<>();
         directions = new ArrayList<>();
@@ -59,6 +71,14 @@ public class MainController implements LocationControllerObserver, MainControlle
         latitudes.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
         longitudes.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
 
+    }
+
+    public boolean saveData(){
+        if(latitudes.size() < 1 || directions.size() < 1) return false;
+
+        String filename = "";
+        String data = "";
+        return persistenceManager.saveData(filename,data);
     }
 
     private String buildDoubleListString(ArrayList<Double> dataList){

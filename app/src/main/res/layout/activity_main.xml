@@ -108,11 +108,12 @@
         android:layout_weight="0.02"
         >
 
+
         <Button
-            android:id="@+id/locationFinderButtonOnce"
+            android:id="@+id/saveDataButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Location Finder Once"
+            android:text="SAVE DATA"
             android:layout_weight="0.5"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
@@ -122,7 +123,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="Continuous Location"/>
+            android:text="Display Location"
+            android:textAlignment="center"
+            android:textSize="20dp"/>
 
     </LinearLayout>
 

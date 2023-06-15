@@ -16,6 +16,7 @@ import java.util.List;
 import controller.directionCalculator.DirectionEnum;
 import controller.locationController.LocationController;
 import controller.MainController;
+import persistence.PersistenceManager;
 
 public class MainViewController implements MainControllerObserver {
 
@@ -27,6 +28,7 @@ public class MainViewController implements MainControllerObserver {
     private TextView longitudeTextView;
     private TextView directionsTextView;
     private final Button locationFinderButtonOnce;
+    private final Button saveDataButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
 
@@ -46,13 +48,28 @@ public class MainViewController implements MainControllerObserver {
         locationFinderButtonOnce.setOnClickListener(setOnClickLocationFinder());
         continuousLocationSwitch = activity.findViewById(R.id.continuousLocationSwitch);
         continuousLocationSwitch.setOnClickListener(setOnClickContinuousLocationFinder());
+        saveDataButton = activity.findViewById(R.id.saveDataButton);
+        saveDataButton.setOnClickListener(setOnClickSaveData());
         trajectoryImageView = activity.findViewById(R.id.trajectoryImageView);
 
+        //Building the controller
         LocationController locationController = new LocationController(activity);
-        controller = new MainController(locationController);
+        PersistenceManager persistenceManager = new PersistenceManager(activity);
+        controller = new MainController(locationController,persistenceManager);
         trajectoryViewController = new TrajectoryViewController();
 
         controller.addObservers(this);
+
+    }
+
+    private View.OnClickListener setOnClickSaveData() {
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.saveData();
+            }
+        };
 
     }
 
