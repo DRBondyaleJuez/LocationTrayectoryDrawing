@@ -46,7 +46,6 @@ public class MainController implements LocationControllerObserver, MainControlle
     }
 
 
-
     public void updateLocation() {
         locationController.updateGPS();
     }
