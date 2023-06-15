@@ -2,6 +2,7 @@ package controller.locationController;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -9,11 +10,18 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Granularity;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -22,6 +30,7 @@ import java.util.ArrayList;
 public class LocationController implements LocationControllerObservable {
 
     private static final int INTERVAL_MILLIS = 100;
+    private static final int REQUEST_CHECK_CODE = 1001;
     private final Activity activity;
     private final LocationRequest locationRequest;
     private final LocationCallback locationCallback;
@@ -39,6 +48,34 @@ public class LocationController implements LocationControllerObservable {
     }
 
     public void updateGPS() {
+
+        //LOCATION ACTIVE SETTINGS REQUEST  - https://www.youtube.com/watch?v=dPqivAUK8ps
+        LocationSettingsRequest locationSettingRequest = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+                .build();
+
+        SettingsClient settingsCLient = LocationServices.getSettingsClient(activity);
+        settingsCLient.checkLocationSettings(locationSettingRequest).addOnCompleteListener(
+                new OnCompleteListener<LocationSettingsResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                        if(task.isSuccessful()){
+
+                        } else {
+                            if(task.getException() instanceof ResolvableApiException){
+                                try {
+                                    ResolvableApiException resolvableApiException = (ResolvableApiException) task.getException();
+                                    resolvableApiException.startResolutionForResult(activity,REQUEST_CHECK_CODE); //When the GPS is not active the previous exception detects this and a message to activate it is displayed
+                                } catch (IntentSender.SendIntentException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+
+        //PERMISSION CHECK
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -67,10 +104,13 @@ public class LocationController implements LocationControllerObservable {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    //https://www.youtube.com/watch?v=dPqivAUK8ps
     private LocationRequest createLocationRequest() {
         return (new LocationRequest.Builder(
                 INTERVAL_MILLIS
-        ).build());
+        ).setGranularity(Granularity.GRANULARITY_FINE)
+         .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+         .build());
     }
 
     private LocationCallback createLocationCallback() {
