@@ -20,6 +20,7 @@ public class DirectionCalculator {
         directions = new ArrayList<>();
         directions.add(DirectionEnum.FRONT);
         if(checkIfStop(initialTrajectoryVector)){
+            directions.remove(0);
             directions.add(0,DirectionEnum.STOP);
         }
     }
