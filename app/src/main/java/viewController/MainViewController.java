@@ -66,7 +66,10 @@ public class MainViewController implements MainControllerObserver {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                continuousLocationSwitch.setChecked(false);
+                continuousLocationSwitchChange();
                 activity.setContentView(R.layout.saved_trajectories_visualizer);
+                new TrajectoriesVisualizerViewController(activity);
             }
         };
     }
@@ -87,18 +90,23 @@ public class MainViewController implements MainControllerObserver {
             @Override
             public void onClick(View view) {
 
-                if(continuousLocationSwitch.isChecked()) {
-                    Toast.makeText(activity, "Obtaining continuous location data.", Toast.LENGTH_LONG).show();
+                continuousLocationSwitchChange();
 
-                    controller.startContinuousUpdateLocation();
-
-                } else {
-                    Toast.makeText(activity, "STOP continuous location data.", Toast.LENGTH_LONG).show();
-                    controller.stopContinuousUpdateLocation();
-                    setEmptyLocationInfo();
-                }
             }
         };
+    }
+
+    private void continuousLocationSwitchChange() {
+        if(continuousLocationSwitch.isChecked()) {
+            Toast.makeText(activity, "Obtaining continuous location data.", Toast.LENGTH_LONG).show();
+
+            controller.startContinuousUpdateLocation();
+
+        } else {
+            Toast.makeText(activity, "STOP continuous location data.", Toast.LENGTH_LONG).show();
+            controller.stopContinuousUpdateLocation();
+            setEmptyLocationInfo();
+        }
     }
 
     private void setEmptyLocationInfo() {

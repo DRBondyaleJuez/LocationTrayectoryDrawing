@@ -80,6 +80,7 @@ public class TrajectoriesVisualizerViewController {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>DELETE BUTTON CLICKED");
 
             }
         };
@@ -90,7 +91,9 @@ public class TrajectoriesVisualizerViewController {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CHANGE VIEWCLICKED");
                 activity.setContentView(R.layout.activity_main);
+                new MainViewController(activity);
             }
         };
     }

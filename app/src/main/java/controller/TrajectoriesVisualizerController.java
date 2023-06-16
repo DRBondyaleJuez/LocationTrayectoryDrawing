@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import model.Trajectory;
 import persistence.PersistenceManager;
-import viewController.TrajectoriesVisualizerViewController;
 
 public class TrajectoriesVisualizerController {
 
@@ -25,7 +24,9 @@ public class TrajectoriesVisualizerController {
     public ArrayList<String> getAllFilenames(){
         ArrayList<String> filenameList = new ArrayList<>();
         for (File currentFile:trajectoryFileList) {
-            filenameList.add(currentFile.getName());
+            if(currentFile.getName().contains("Trajectory")) {
+                filenameList.add(currentFile.getName());
+            }
         }
         return filenameList;
     }
@@ -37,9 +38,11 @@ public class TrajectoriesVisualizerController {
 
         trajectoryList.clear();
 
-        for (File file:trajectoryFileList) {
-            Trajectory currentTrajectory = extractTrajectoryFromFile(file);
-            trajectoryList.add(currentTrajectory);
+        for (File currentFile:trajectoryFileList) {
+            if(currentFile.getName().contains("Trajectory")) {
+                Trajectory currentTrajectory = extractTrajectoryFromFile(currentFile);
+                trajectoryList.add(currentTrajectory);
+            }
         }
 
     }

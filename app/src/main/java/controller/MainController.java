@@ -86,7 +86,7 @@ public class MainController implements LocationControllerObserver, MainControlle
         DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
         Date date = new Date();
         String currentDateTime = dateFormat.format(date);
-        String filename = "Trajectory_at_" + currentDateTime + ".txt";
+        String filename = "Trajectory_at_" + currentDateTime;
 
         //Formatting the data for storage
         String data = "";

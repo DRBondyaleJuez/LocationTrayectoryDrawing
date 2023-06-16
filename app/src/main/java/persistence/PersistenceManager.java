@@ -15,9 +15,10 @@ import java.util.ArrayList;
 
 public class PersistenceManager {
 
-    private static String STORAGE_PATH = "";
-    private Activity mainActivity;
 
+    private Activity mainActivity;
+    private static String STORAGE_PATH = "/trajectory_files/";
+    private static String EXTENSION = ".txt";
     public PersistenceManager(Activity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -30,9 +31,9 @@ public class PersistenceManager {
         FileOutputStream fileOutputStream = null;
 
         try {
-            fileOutputStream = mainActivity.openFileOutput(filename, Context.MODE_PRIVATE);
+            fileOutputStream = mainActivity.openFileOutput(filename + EXTENSION, Context.MODE_PRIVATE);
             fileOutputStream.write(data.getBytes());
-            Toast.makeText(mainActivity, "Saved to " + mainActivity.getFilesDir() + "/" + filename,Toast.LENGTH_LONG).show();
+            Toast.makeText(mainActivity, "Saved to " + mainActivity.getFilesDir() + filename + EXTENSION,Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
