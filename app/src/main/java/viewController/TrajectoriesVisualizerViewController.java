@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,10 +21,13 @@ public class TrajectoriesVisualizerViewController {
     private final Activity activity;
 
     //View Components
+    private final Button backToTrackerButton;
     private final Button deleteButton;
     private final Button displayButton;
     private final CheckBox selectAllCheckBox;
     private final ImageView trajectoryVisualizerImageView;
+
+    private final TextView noFileTextView;
 
     //ViewController Attributes
     private final TrajectoriesVisualizerController controller;
@@ -40,6 +44,9 @@ public class TrajectoriesVisualizerViewController {
         deleteButton.setOnClickListener(setOnClickDeleteButton());
         displayButton = activity.findViewById(R.id.displayButton);
         displayButton.setOnClickListener(setOnClickDisplayButton());
+        backToTrackerButton = activity.findViewById(R.id.backToTrackerButton);
+        backToTrackerButton.setOnClickListener(setOnClickChangeView());
+        noFileTextView = activity.findViewById(R.id.noFileTextView);
         selectAllCheckBox = activity.findViewById(R.id.selectAllCheckBox);
 
         RecyclerView trajectoryFilesRecyclerView = activity.findViewById(R.id.trajectoryFilesRecyclerView);
@@ -49,7 +56,13 @@ public class TrajectoriesVisualizerViewController {
         trajectoryViewController = new TrajectoryDrawingViewController();
         recyclerViewController = new RecyclerViewController(trajectoryFilesRecyclerView,this);
 
-        recyclerViewController.setRecyclerViewAdapter(activity,controller.getAllFilenames());
+        if(controller.getAllFilenames().size() > 0){
+            noFileTextView.setVisibility(View.GONE);
+            recyclerViewController.setRecyclerViewAdapter(activity,controller.getAllFilenames());
+        } else {
+            trajectoryFilesRecyclerView.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -71,6 +84,15 @@ public class TrajectoriesVisualizerViewController {
             }
         };
 
+    }
+
+    private View.OnClickListener setOnClickChangeView() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.setContentView(R.layout.activity_main);
+            }
+        };
     }
 
     public void trajectoryFileChecked(int position) {

@@ -17,7 +17,9 @@ public class TrajectoriesVisualizerController {
         this.persistenceManager = persistenceManager;
         trajectoryFileList = collectTrajectoryFiles();
         trajectoryList = new ArrayList<>();
-        buildTrajectoryList();
+        if(trajectoryFileList.length > 0) {
+            buildTrajectoryList();
+        }
     }
 
     public ArrayList<String> getAllFilenames(){

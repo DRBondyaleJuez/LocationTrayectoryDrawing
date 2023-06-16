@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="latitudeValue"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="11dp"/>
 
         </LinearLayout>
 
@@ -85,6 +86,7 @@
                 android:layout_weight="0.5"
                 android:text="longitudeValue"
                 android:textAlignment="center"
+                android:textSize="11dp"
                 />
 
         </LinearLayout>
@@ -99,6 +101,19 @@
         android:text="Directions"
         android:textAlignment="center"
         />
+
+
+    <Switch
+        android:id="@+id/continuousLocationSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.02"
+        android:text="Display Location"
+
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:paddingHorizontal="50dp"
+        android:layout_marginBottom="20dp"/>
 
     <!--BUTTON Linear Layout-->
     <LinearLayout
@@ -118,14 +133,15 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
 
-        <Switch
-            android:id="@+id/continuousLocationSwitch"
+        <Button
+            android:id="@+id/goToVisualizerButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:text="Go to Visualizer"
             android:layout_weight="0.5"
-            android:text="Display Location"
-            android:textAlignment="center"
-            android:textSize="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
 
     </LinearLayout>
 

@@ -28,6 +28,7 @@ public class MainViewController implements MainControllerObserver {
     private TextView longitudeTextView;
     private TextView directionsTextView;
     private final Button saveDataButton;
+    private final Button goToVisualizerButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
 
@@ -47,6 +48,8 @@ public class MainViewController implements MainControllerObserver {
         continuousLocationSwitch.setOnClickListener(setOnClickContinuousLocationFinder());
         saveDataButton = activity.findViewById(R.id.saveDataButton);
         saveDataButton.setOnClickListener(setOnClickSaveData());
+        goToVisualizerButton = activity.findViewById(R.id.goToVisualizerButton);
+        goToVisualizerButton.setOnClickListener(setOnClickChangeView());
         trajectoryImageView = activity.findViewById(R.id.trajectoryImageView);
 
         //Building the controller
@@ -57,6 +60,15 @@ public class MainViewController implements MainControllerObserver {
 
         controller.addObservers(this);
 
+    }
+
+    private View.OnClickListener setOnClickChangeView() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.setContentView(R.layout.saved_trajectories_visualizer);
+            }
+        };
     }
 
     private View.OnClickListener setOnClickSaveData() {
