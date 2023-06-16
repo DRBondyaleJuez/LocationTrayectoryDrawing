@@ -64,4 +64,18 @@ public class TrajectoriesVisualizerController {
 
         return new Trajectory(currentFilename,extractedLatitudes,extractedLongitudes);
     }
+
+    public void trajectoryFileChecked(int position) {
+        trajectoryList.get(position).setCheckedStatus(true);
+    }
+
+    public void trajectoryFileUnchecked(int position) {
+        trajectoryList.get(position).setCheckedStatus(false);
+    }
+
+    public void applyToAllTrajectories(boolean currentCheckStatus) {
+        for (Trajectory currentTrajectory : trajectoryList) {
+            currentTrajectory.setCheckedStatus(currentCheckStatus);
+        }
+    }
 }

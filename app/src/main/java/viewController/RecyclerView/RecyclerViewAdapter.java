@@ -51,10 +51,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(final View view) {
             super(view);
             trajectoryFileCheckBox = view.findViewById(R.id.trajectoryFileCheckBox);
-            //titleTextView.setSelected(true); //So long title move horizontally
 
             trajectoryFileCheckBox.setOnCheckedChangeListener(setOnTrajectoryCheckBoxChange());
-            //view.setOnClickListener(setOnClick());
+            recyclerViewController.addViewHolder(this);
+        }
+
+        public void setTrajectoryFileCheckBox(boolean checkedStatus){
+            trajectoryFileCheckBox.setChecked(checkedStatus);
         }
 
         private CompoundButton.OnCheckedChangeListener setOnTrajectoryCheckBoxChange() {

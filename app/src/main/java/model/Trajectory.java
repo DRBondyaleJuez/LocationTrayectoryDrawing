@@ -28,8 +28,7 @@ public class Trajectory {
         return isChecked;
     }
 
-    public void changeIsCheckedStatus(){
-        boolean newIsCheckedStatus = !isChecked;
-        isChecked = newIsCheckedStatus;
+    public void setCheckedStatus(boolean status){
+        isChecked = status;
     }
 }

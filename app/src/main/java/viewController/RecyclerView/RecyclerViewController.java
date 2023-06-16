@@ -23,6 +23,8 @@ public class RecyclerViewController {
     private final RecyclerView trajectoryVisualizerRecyclerView;
     private final TrajectoriesVisualizerViewController trajectoriesVisualizerViewController;
 
+    private ArrayList<RecyclerViewAdapter.MyViewHolder> viewHoldersOfRecyclerViewAdapter;
+
     /**
      * This is the constructor.
      * @param
@@ -30,6 +32,7 @@ public class RecyclerViewController {
     public RecyclerViewController(RecyclerView trajectoryVisualizerRecyclerView,TrajectoriesVisualizerViewController trajectoriesVisualizerViewController) {
         this.trajectoryVisualizerRecyclerView = trajectoryVisualizerRecyclerView;
         this.trajectoriesVisualizerViewController = trajectoriesVisualizerViewController;
+        viewHoldersOfRecyclerViewAdapter = new ArrayList<>();
     }
 
     /**
@@ -58,5 +61,15 @@ public class RecyclerViewController {
 
     public void trajectoryFileUnchecked(int position) {
         trajectoriesVisualizerViewController.trajectoryFileUnChecked(position);
+    }
+
+    public void addViewHolder(RecyclerViewAdapter.MyViewHolder viewHolder){
+        viewHoldersOfRecyclerViewAdapter.add(viewHolder);
+    }
+
+    public void setCheckBoxesOfViewHolders(boolean checkedStatus){
+        for (RecyclerViewAdapter.MyViewHolder currentViewHolder : viewHoldersOfRecyclerViewAdapter) {
+            currentViewHolder.setTrajectoryFileCheckBox(checkedStatus);
+        }
     }
 }

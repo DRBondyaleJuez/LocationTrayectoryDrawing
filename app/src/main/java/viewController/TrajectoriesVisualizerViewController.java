@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class TrajectoriesVisualizerViewController {
         backToTrackerButton.setOnClickListener(setOnClickChangeView());
         noFileTextView = activity.findViewById(R.id.noFileTextView);
         selectAllCheckBox = activity.findViewById(R.id.selectAllCheckBox);
+        selectAllCheckBox.setOnCheckedChangeListener(setSelectedAllCheckChange());
 
         RecyclerView trajectoryFilesRecyclerView = activity.findViewById(R.id.trajectoryFilesRecyclerView);
 
@@ -64,6 +66,18 @@ public class TrajectoriesVisualizerViewController {
         }
 
 
+    }
+
+    private CompoundButton.OnCheckedChangeListener setSelectedAllCheckChange() {
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                controller.applyToAllTrajectories(isChecked);
+                recyclerViewController.setCheckBoxesOfViewHolders(isChecked);
+
+            }
+        };
     }
 
     private View.OnClickListener setOnClickDisplayButton() {
@@ -91,7 +105,6 @@ public class TrajectoriesVisualizerViewController {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CHANGE VIEWCLICKED");
                 activity.setContentView(R.layout.activity_main);
                 new MainViewController(activity);
             }
@@ -99,8 +112,10 @@ public class TrajectoriesVisualizerViewController {
     }
 
     public void trajectoryFileChecked(int position) {
+        controller.trajectoryFileChecked(position);
     }
 
     public void trajectoryFileUnChecked(int position) {
+        controller.trajectoryFileUnchecked(position);
     }
 }
