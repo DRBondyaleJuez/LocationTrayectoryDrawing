@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-        android:text="Display Trajectory"
+        android:text="filename"
         android:textSize="15dp"
         android:layout_marginLeft="10dp"/>
 

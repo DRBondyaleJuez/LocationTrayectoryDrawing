@@ -12,13 +12,11 @@
     android:layout_marginRight="20dp">
 
 
-
-
     <ImageView
-        android:id="@+id/trajectoryImageView"
+        android:id="@+id/trajectoryVisualizerImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.6"
+        android:layout_weight="0.7"
         android:adjustViewBounds="true"/>
 
 
@@ -51,10 +49,10 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/songListRecyclerView"
+        android:id="@+id/trajectoryFilesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
+        android:layout_weight="0.01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +61,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
+        android:layout_weight="0.01"
         android:orientation="horizontal">
 
         <Button
