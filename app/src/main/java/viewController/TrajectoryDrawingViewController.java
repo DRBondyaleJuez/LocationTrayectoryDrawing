@@ -4,11 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 import java.util.ArrayList;
 
-public class TrajectoryViewController {
+public class TrajectoryDrawingViewController {
 
     private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
     private static int BITMAP_SIZE = 5000;
@@ -18,7 +17,7 @@ public class TrajectoryViewController {
 
     private Double previousMaxDistance;
 
-    public TrajectoryViewController( ) {
+    public TrajectoryDrawingViewController( ) {
         previousMaxDistance = 0.0;
     }
 

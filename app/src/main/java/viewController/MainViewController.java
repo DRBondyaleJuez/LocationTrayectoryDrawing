@@ -34,7 +34,7 @@ public class MainViewController implements MainControllerObserver {
 
     // View controller attributes
     private final MainController controller;
-    private final TrajectoryViewController trajectoryViewController;
+    private final TrajectoryDrawingViewController trajectoryViewController;
 
     public MainViewController(Activity activity) {
         this.activity = activity;
@@ -53,7 +53,7 @@ public class MainViewController implements MainControllerObserver {
         LocationController locationController = new LocationController(activity);
         PersistenceManager persistenceManager = new PersistenceManager(activity);
         controller = new MainController(locationController,persistenceManager);
-        trajectoryViewController = new TrajectoryViewController();
+        trajectoryViewController = new TrajectoryDrawingViewController();
 
         controller.addObservers(this);
 

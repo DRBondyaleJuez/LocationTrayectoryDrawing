@@ -7,14 +7,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import viewController.TrajectoryViewController;
+import viewController.TrajectoryDrawingViewController;
 
 public class TrajectoryView  {
 
     private Activity activity;
-    private TrajectoryViewController viewController;
+    private TrajectoryDrawingViewController viewController;
 
-    public TrajectoryView(TrajectoryViewController viewController) {
+    public TrajectoryView(TrajectoryDrawingViewController viewController) {
         this.activity = activity;
         this.viewController = viewController;
     }
