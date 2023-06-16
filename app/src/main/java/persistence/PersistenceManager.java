@@ -5,11 +5,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class PersistenceManager {
 
@@ -73,5 +75,11 @@ public class PersistenceManager {
         }
 
         return fileContent;
+    }
+
+    public File[] getAllFiles() {
+        File directory = mainActivity.getFilesDir();
+        File[] filesInDirectory = directory.listFiles();
+        return filesInDirectory;
     }
 }

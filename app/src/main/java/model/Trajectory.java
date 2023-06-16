@@ -4,21 +4,23 @@ import java.util.ArrayList;
 
 public class Trajectory {
 
-    private final ArrayList<String> latitudes;
-    private final ArrayList<String> longitudes;
+    String filename;
+    private final ArrayList<Double> latitudes;
+    private final ArrayList<Double> longitudes;
     private boolean isChecked;
 
-    public Trajectory(ArrayList<String> latitudes, ArrayList<String> longitudes) {
+    public Trajectory(String filename,ArrayList<Double> latitudes, ArrayList<Double> longitudes) {
+        this.filename = filename;
         this.latitudes = latitudes;
         this.longitudes = longitudes;
         isChecked = false;
     }
 
-    public ArrayList<String> getLatitudes() {
+    public ArrayList<Double> getLatitudes() {
         return latitudes;
     }
 
-    public ArrayList<String> getLongitudes() {
+    public ArrayList<Double> getLongitudes() {
         return longitudes;
     }
 
