@@ -123,7 +123,7 @@ public class MainViewController implements MainControllerObserver {
 
     @Override
     public void setTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
-        trajectoryImageView.setImageBitmap(trajectoryViewController.getTrajectory(latitudes,longitudes));
+        trajectoryImageView.setImageBitmap(trajectoryViewController.getTrajectoryBITMAP(latitudes,longitudes));
     }
 
     @Override

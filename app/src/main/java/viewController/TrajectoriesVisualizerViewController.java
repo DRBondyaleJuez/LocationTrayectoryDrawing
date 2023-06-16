@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.locationtrayectorydrawing.R;
 
+import java.util.ArrayList;
+
 import controller.TrajectoriesVisualizerController;
+import model.Trajectory;
 import persistence.PersistenceManager;
 import viewController.RecyclerView.RecyclerViewController;
 
@@ -32,7 +35,7 @@ public class TrajectoriesVisualizerViewController {
 
     //ViewController Attributes
     private final TrajectoriesVisualizerController controller;
-    private final TrajectoryDrawingViewController trajectoryViewController;
+    private final TrajectoryDrawingViewController trajectoryDrawingViewController;
     private final RecyclerViewController recyclerViewController;
 
     public TrajectoriesVisualizerViewController(Activity activity) {
@@ -55,7 +58,7 @@ public class TrajectoriesVisualizerViewController {
 
         PersistenceManager persistenceManager = new PersistenceManager(activity);
         controller = new TrajectoriesVisualizerController(persistenceManager);
-        trajectoryViewController = new TrajectoryDrawingViewController();
+        trajectoryDrawingViewController = new TrajectoryDrawingViewController();
         recyclerViewController = new RecyclerViewController(trajectoryFilesRecyclerView,this);
 
         if(controller.getAllFilenames().size() > 0){
@@ -84,6 +87,10 @@ public class TrajectoriesVisualizerViewController {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ArrayList<Trajectory> selectedTrajectories = controller.getSelectedTrajectories();
+
+                trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.getSelectedTrajectoriesBITMAP(selectedTrajectories));
 
             }
         };

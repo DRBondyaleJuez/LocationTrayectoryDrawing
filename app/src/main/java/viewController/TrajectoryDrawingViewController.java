@@ -7,9 +7,12 @@ import android.graphics.Paint;
 
 import java.util.ArrayList;
 
+import model.Trajectory;
+
 public class TrajectoryDrawingViewController {
 
     private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
+    private static final double INDICATOR_OF_NEW_TRAJECTORY = -2001;
     private static int BITMAP_SIZE = 5000;
     private static int SQUARE_SIZE = 50;
     private static int ADJUSTED_BITMAP_SIZE = BITMAP_SIZE-SQUARE_SIZE;
@@ -21,40 +24,57 @@ public class TrajectoryDrawingViewController {
         previousMaxDistance = 0.0;
     }
 
-    public Bitmap getTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
+    public Bitmap getTrajectoryBITMAP(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
-        int lastIndex = latitudes.size()-1;
+        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinate(latitudes,longitudes);
 
-        //Check if the previousMaxDistance changes
-        Double latDifference = Math.abs(latitudes.get(0)-latitudes.get(lastIndex));
-        Double lonDifference = Math.abs(longitudes.get(0)-longitudes.get(lastIndex));
-        if(previousMaxDistance < latDifference) previousMaxDistance = latDifference;
-        if(previousMaxDistance < lonDifference) previousMaxDistance = lonDifference;
+        return drawTrajectory(xyBitmapCoordinates.getXCoordinates(), xyBitmapCoordinates.getYCoordinates());
+    }
 
-        int [] xCoordinatesInBitmap = new int[latitudes.size()];
-        int [] yCoordinatesInBitmap = new int[longitudes.size()];
+    public Bitmap getSelectedTrajectoriesBITMAP(ArrayList<Trajectory> selectedTrajectories) {
+        //Prepare data for BITMAP creation
+        ArrayList<Double> allLatitudesTogether = new ArrayList<>();
+        ArrayList<Double> allLongitudesTogether = new ArrayList<>();
 
-        for (int i = 0; i < latitudes.size(); i++) {
+        for (Trajectory currentTrajectory : selectedTrajectories) {
+            allLatitudesTogether.addAll(currentTrajectory.getLatitudes());
+            allLatitudesTogether.add(INDICATOR_OF_NEW_TRAJECTORY);
 
-            if(previousMaxDistance == 0){
-                xCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
-                yCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
-            } else {
-
-                if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE) {
-                    xCoordinatesInBitmap[i] = (int) ((((latitudes.get(i) - latitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
-                    yCoordinatesInBitmap[i] = (int) ((((longitudes.get(i) - longitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
-                } else {
-                    xCoordinatesInBitmap[i] = latitudes.get(i).intValue();
-                    yCoordinatesInBitmap[i] = latitudes.get(i).intValue();
-
-                }
-            }
-
+            allLongitudesTogether.addAll(currentTrajectory.getLongitudes());
+            allLatitudesTogether.add(INDICATOR_OF_NEW_TRAJECTORY);
         }
 
+        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinate(allLatitudesTogether,allLongitudesTogether);
 
-        return drawTrajectory(xCoordinatesInBitmap,yCoordinatesInBitmap);
+        return drawMultipleTrajectoriesTogether(selectedTrajectories.size(),xyBitmapCoordinates.getXCoordinates(), xyBitmapCoordinates.getYCoordinates());
+
+    }
+
+    private Bitmap drawMultipleTrajectoriesTogether(int numberOfTrajectories, int[] xCoordinates, int[] yCoordinates) {
+        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
+        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(currentBitmap);
+
+        float hueUnit = 340/numberOfTrajectories;
+        int trajectoryNumber = 1;
+
+        if(xCoordinates.length > 1) {
+            for (int i = 0; i < xCoordinates.length - 1; i++) {
+                float[] hsv ={hueUnit*trajectoryNumber,100,100};
+                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
+                if(xCoordinates[i] == INDICATOR_OF_NEW_TRAJECTORY || xCoordinates[i+1] == INDICATOR_OF_NEW_TRAJECTORY){
+                    trajectoryNumber++;
+                    continue;
+                }
+                Paint currentPaint = new Paint();
+                currentPaint.setColor(Color.HSVToColor(hsv));
+                currentPaint.setStrokeWidth(10);
+
+                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
+            }
+        }
+
+        return currentBitmap;
     }
 
 
@@ -74,9 +94,7 @@ public class TrajectoryDrawingViewController {
 
             canvas.drawRect(ourRect,blue);
         }
-
  */
-
         float hueUnit = 340/xCoordinates.length;
 
         if(xCoordinates.length > 1) {
@@ -84,11 +102,11 @@ public class TrajectoryDrawingViewController {
                 if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
 
                 float[] hsv ={hueUnit*i,100,100};
-                Paint yellow = new Paint();
-                yellow.setColor(Color.HSVToColor(hsv));
-                yellow.setStrokeWidth(10);
+                Paint currentPaint = new Paint();
+                currentPaint.setColor(Color.HSVToColor(hsv));
+                currentPaint.setStrokeWidth(10);
 
-                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], yellow);
+                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
             }
         }
 
@@ -126,6 +144,59 @@ public class TrajectoryDrawingViewController {
         String gs = Integer.toHexString((int)(g * 256));
         String bs = Integer.toHexString((int)(b * 256));
         return rs + gs + bs;
+    }
+
+    private XYBitmapCoordinates getBitmapCoordinate(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
+
+        int lastIndex = latitudes.size()-1;
+
+        //Check if the previousMaxDistance changes
+        Double latDifference = Math.abs(latitudes.get(0)-latitudes.get(lastIndex));
+        Double lonDifference = Math.abs(longitudes.get(0)-longitudes.get(lastIndex));
+        if(previousMaxDistance < latDifference) previousMaxDistance = latDifference;
+        if(previousMaxDistance < lonDifference) previousMaxDistance = lonDifference;
+
+        int [] xCoordinatesInBitmap = new int[latitudes.size()];
+        int [] yCoordinatesInBitmap = new int[longitudes.size()];
+
+        for (int i = 0; i < latitudes.size(); i++) {
+
+            if(previousMaxDistance == 0){
+                xCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
+                yCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
+            } else {
+
+                if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE && latitudes.get(i) != INDICATOR_OF_NEW_TRAJECTORY) {
+                    xCoordinatesInBitmap[i] = (int) ((((latitudes.get(i) - latitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                    yCoordinatesInBitmap[i] = (int) ((((longitudes.get(i) - longitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                } else {
+                    xCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+                    yCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+
+                }
+            }
+        }
+
+        return new XYBitmapCoordinates(xCoordinatesInBitmap,yCoordinatesInBitmap);
+    }
+
+    public class XYBitmapCoordinates{
+
+        private int[] xCoordinates;
+        private int[] yCoordinates;
+
+        public XYBitmapCoordinates(int[] xCoordinates, int[] yCoordinates) {
+            this.xCoordinates = xCoordinates;
+            this.yCoordinates = yCoordinates;
+        }
+
+        private int[] getXCoordinates() {
+            return xCoordinates;
+        }
+
+        private int[] getYCoordinates() {
+            return yCoordinates;
+        }
     }
 
 

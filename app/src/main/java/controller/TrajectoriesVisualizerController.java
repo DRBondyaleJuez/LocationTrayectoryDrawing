@@ -78,4 +78,16 @@ public class TrajectoriesVisualizerController {
             currentTrajectory.setCheckedStatus(currentCheckStatus);
         }
     }
+
+    public ArrayList<Trajectory> getSelectedTrajectories() {
+
+        ArrayList<Trajectory> selectedTrajectories = new ArrayList<>();
+
+        for (Trajectory currentTrajectory : trajectoryList) {
+            if(currentTrajectory.isChecked()){
+                selectedTrajectories.add(currentTrajectory);
+            }
+        }
+        return selectedTrajectories;
+    }
 }
