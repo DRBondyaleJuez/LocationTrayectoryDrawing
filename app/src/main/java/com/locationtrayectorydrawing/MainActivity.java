@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //setContentView(R.layout.saved_trajectories_visualizer);
-        //setContentView(R.layout.test_layout);
         new MainViewController(this);
         //new TrajectoriesVisualizerViewController(this);
     }
