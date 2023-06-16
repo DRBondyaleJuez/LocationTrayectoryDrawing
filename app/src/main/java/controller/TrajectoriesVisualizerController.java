@@ -9,13 +9,11 @@ import viewController.TrajectoriesVisualizerViewController;
 
 public class TrajectoriesVisualizerController {
 
-    TrajectoriesVisualizerViewController viewController;
     PersistenceManager persistenceManager;
     File[] trajectoryFileList;
     ArrayList<Trajectory> trajectoryList;
 
-    public TrajectoriesVisualizerController(TrajectoriesVisualizerViewController viewController, PersistenceManager persistenceManager) {
-        this.viewController = viewController;
+    public TrajectoriesVisualizerController(PersistenceManager persistenceManager) {
         this.persistenceManager = persistenceManager;
         trajectoryFileList = collectTrajectoryFiles();
         trajectoryList = new ArrayList<>();
