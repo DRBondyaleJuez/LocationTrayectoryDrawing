@@ -26,7 +26,7 @@ public class TrajectoryDrawingViewController {
 
     public Bitmap getTrajectoryBITMAP(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
-        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinate(latitudes,longitudes);
+        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinates(latitudes,longitudes);
 
         return drawTrajectory(xyBitmapCoordinates.getXCoordinates(), xyBitmapCoordinates.getYCoordinates());
     }
@@ -41,10 +41,10 @@ public class TrajectoryDrawingViewController {
             allLatitudesTogether.add(INDICATOR_OF_NEW_TRAJECTORY);
 
             allLongitudesTogether.addAll(currentTrajectory.getLongitudes());
-            allLatitudesTogether.add(INDICATOR_OF_NEW_TRAJECTORY);
+            allLongitudesTogether.add(INDICATOR_OF_NEW_TRAJECTORY);
         }
 
-        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinate(allLatitudesTogether,allLongitudesTogether);
+        XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinatesMultipleTrajectories(allLatitudesTogether,allLongitudesTogether);
 
         return drawMultipleTrajectoriesTogether(selectedTrajectories.size(),xyBitmapCoordinates.getXCoordinates(), xyBitmapCoordinates.getYCoordinates());
 
@@ -55,7 +55,7 @@ public class TrajectoryDrawingViewController {
         Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(currentBitmap);
 
-        float hueUnit = 340/numberOfTrajectories;
+        float hueUnit = 300/numberOfTrajectories;
         int trajectoryNumber = 1;
 
         if(xCoordinates.length > 1) {
@@ -146,7 +146,7 @@ public class TrajectoryDrawingViewController {
         return rs + gs + bs;
     }
 
-    private XYBitmapCoordinates getBitmapCoordinate(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
+    private XYBitmapCoordinates getBitmapCoordinates(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
         int lastIndex = latitudes.size()-1;
 
@@ -169,6 +169,43 @@ public class TrajectoryDrawingViewController {
                 if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE && latitudes.get(i) != INDICATOR_OF_NEW_TRAJECTORY) {
                     xCoordinatesInBitmap[i] = (int) ((((latitudes.get(i) - latitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
                     yCoordinatesInBitmap[i] = (int) ((((longitudes.get(i) - longitudes.get(0)) / previousMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                } else {
+                    xCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+                    yCoordinatesInBitmap[i] = latitudes.get(i).intValue();
+
+                }
+            }
+        }
+
+        return new XYBitmapCoordinates(xCoordinatesInBitmap,yCoordinatesInBitmap);
+    }
+
+    private XYBitmapCoordinates getBitmapCoordinatesMultipleTrajectories(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
+
+        double currentMaxDistance = 0.0;
+        //Finding the biggest difference so no trajectory representation falls out of the bitmap
+        for (int i = 0; i < latitudes.size()-2; i++) {
+            if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE && latitudes.get(i) != INDICATOR_OF_NEW_TRAJECTORY) {
+                Double latDifference = Math.abs(latitudes.get(0) - latitudes.get(i));
+                Double lonDifference = Math.abs(longitudes.get(0) - longitudes.get(i));
+                if (currentMaxDistance < latDifference) currentMaxDistance = latDifference;
+                if (currentMaxDistance < lonDifference) currentMaxDistance = lonDifference;
+            }
+        }
+
+        int [] xCoordinatesInBitmap = new int[latitudes.size()];
+        int [] yCoordinatesInBitmap = new int[longitudes.size()];
+
+        for (int i = 0; i < latitudes.size(); i++) {
+
+            if(currentMaxDistance == 0){
+                xCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
+                yCoordinatesInBitmap[i] = ADJUSTED_BITMAP_SIZE/2;
+            } else {
+
+                if(latitudes.get(i) != DEFAULT_DOUBLE_STOP_OR_ABSENCE && latitudes.get(i) != INDICATOR_OF_NEW_TRAJECTORY) {
+                    xCoordinatesInBitmap[i] = (int) ((((latitudes.get(i) - latitudes.get(0)) / currentMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
+                    yCoordinatesInBitmap[i] = (int) ((((longitudes.get(i) - longitudes.get(0)) / currentMaxDistance) + 1) * ADJUSTED_BITMAP_SIZE / 2);
                 } else {
                     xCoordinatesInBitmap[i] = latitudes.get(i).intValue();
                     yCoordinatesInBitmap[i] = latitudes.get(i).intValue();
