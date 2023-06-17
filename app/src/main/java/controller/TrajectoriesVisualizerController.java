@@ -90,4 +90,58 @@ public class TrajectoriesVisualizerController {
         }
         return selectedTrajectories;
     }
+
+    public FileDeletionResponse deleteSelectedFiles() {
+
+        ArrayList<String> deletedFiles = new ArrayList<>();
+        ArrayList<String> unableToDeleteFiles = new ArrayList<>();
+
+        for (int i = 0; i < trajectoryFileList.length; i++) {
+            if(trajectoryList.get(i).isChecked()){
+                String currentFilename = trajectoryFileList[i].getName();
+                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EVLAUATING FILE FOR DELETION: " + currentFilename);
+                if(trajectoryFileList[i].delete()){
+                    deletedFiles.add(currentFilename);
+                } else {
+                    unableToDeleteFiles.add(currentFilename);
+                }
+            }
+        }
+
+        //Deletion triggering rebuilding the corresponding collections in this class:
+        trajectoryFileList = collectTrajectoryFiles();
+        trajectoryList = new ArrayList<>();
+        if(trajectoryFileList.length > 0) {
+            buildTrajectoryList();
+        }
+
+        boolean completeDeletion = unableToDeleteFiles.isEmpty();
+
+        return new FileDeletionResponse(completeDeletion,deletedFiles,unableToDeleteFiles);
+    }
+
+    //Nested class to handle the encapsulation of the response for the viewController when there is an attempt at deleting files
+    public class FileDeletionResponse{
+        boolean completeDeletion;
+        ArrayList<String> filesDeleted;
+        ArrayList<String> filesUnableToDelete;
+
+        public FileDeletionResponse(boolean completeDeletion, ArrayList<String> filesDeleted, ArrayList<String> filesUnableToDelete) {
+            this.completeDeletion = completeDeletion;
+            this.filesDeleted = filesDeleted;
+            this.filesUnableToDelete = filesUnableToDelete;
+        }
+
+        public boolean isCompleteDeletion() {
+            return completeDeletion;
+        }
+
+        public ArrayList<String> getFilesDeleted() {
+            return filesDeleted;
+        }
+
+        public ArrayList<String> getFilesUnableToDelete() {
+            return filesUnableToDelete;
+        }
+    }
 }

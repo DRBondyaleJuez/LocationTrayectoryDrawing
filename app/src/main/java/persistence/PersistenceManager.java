@@ -48,7 +48,6 @@ public class PersistenceManager {
                 }
             }
         }
-
         return false;
     }
 
@@ -81,6 +80,15 @@ public class PersistenceManager {
     public File[] getAllFiles() {
         File directory = mainActivity.getFilesDir();
         File[] filesInDirectory = directory.listFiles();
+        ArrayList<File> filteredFileList = new ArrayList<>();
+        for (File currentFile:filesInDirectory) {
+            if(currentFile.getName().contains("Trajectory")){
+                filteredFileList.add(currentFile);
+            }
+        }
+
+        filesInDirectory = filteredFileList.toArray(new File[filteredFileList.size()]);
+
         return filesInDirectory;
     }
 }

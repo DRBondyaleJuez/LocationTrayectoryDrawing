@@ -77,6 +77,13 @@ public class TrajectoryDrawingViewController {
         return currentBitmap;
     }
 
+    public Bitmap drawEmptyBlackSquare(){
+            //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
+            Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(currentBitmap);
+
+        return currentBitmap;
+    }
 
     private Bitmap drawTrajectory(int[] xCoordinates, int[] yCoordinates){
         //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);

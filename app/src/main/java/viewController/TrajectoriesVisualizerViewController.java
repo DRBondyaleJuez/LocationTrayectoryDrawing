@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +31,7 @@ public class TrajectoriesVisualizerViewController {
     private final Button displayButton;
     private final CheckBox selectAllCheckBox;
     private final ImageView trajectoryVisualizerImageView;
-
+    private RecyclerView trajectoryFilesRecyclerView;
     private final TextView noFileTextView;
 
     //ViewController Attributes
@@ -54,7 +55,7 @@ public class TrajectoriesVisualizerViewController {
         selectAllCheckBox = activity.findViewById(R.id.selectAllCheckBox);
         selectAllCheckBox.setOnCheckedChangeListener(setSelectedAllCheckChange());
 
-        RecyclerView trajectoryFilesRecyclerView = activity.findViewById(R.id.trajectoryFilesRecyclerView);
+        trajectoryFilesRecyclerView = activity.findViewById(R.id.trajectoryFilesRecyclerView);
 
         PersistenceManager persistenceManager = new PersistenceManager(activity);
         controller = new TrajectoriesVisualizerController(persistenceManager);
@@ -63,12 +64,12 @@ public class TrajectoriesVisualizerViewController {
 
         if(controller.getAllFilenames().size() > 0){
             noFileTextView.setVisibility(View.GONE);
+            trajectoryFilesRecyclerView.setVisibility(View.VISIBLE);
             recyclerViewController.setRecyclerViewAdapter(activity,controller.getAllFilenames());
         } else {
+            noFileTextView.setVisibility(View.VISIBLE);
             trajectoryFilesRecyclerView.setVisibility(View.GONE);
         }
-
-
     }
 
     private CompoundButton.OnCheckedChangeListener setSelectedAllCheckChange() {
@@ -101,8 +102,36 @@ public class TrajectoriesVisualizerViewController {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>DELETE BUTTON CLICKED");
+                TrajectoriesVisualizerController.FileDeletionResponse deletionResponse = controller.deleteSelectedFiles();
 
+                String message;
+
+                if(deletionResponse.isCompleteDeletion()){
+                    message = "Deleted selected files: \n ";
+                    for (String filename: deletionResponse.getFilesDeleted()) {
+                        message = message + filename + "\n";
+                    }
+
+                } else {
+                    message = "Unable to delete files: \n ";
+                    for (String filename: deletionResponse.getFilesUnableToDelete()) {
+                        message = message + filename + "\n";
+                    }
+
+                }
+                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+
+                //Redo recycler View
+                if(controller.getAllFilenames().size() > 0){
+                    noFileTextView.setVisibility(View.GONE);
+                    trajectoryFilesRecyclerView.setVisibility(View.VISIBLE);
+                    recyclerViewController.setRecyclerViewAdapter(activity,controller.getAllFilenames());
+                } else {
+                    noFileTextView.setVisibility(View.VISIBLE);
+                    trajectoryFilesRecyclerView.setVisibility(View.GONE);
+                }
+                //Maybe redoBitmap
+                trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
             }
         };
 
