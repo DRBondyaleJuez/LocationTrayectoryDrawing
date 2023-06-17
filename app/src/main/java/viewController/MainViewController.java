@@ -35,7 +35,7 @@ public class MainViewController implements MainControllerObserver {
 
     // View controller attributes
     private final MainController controller;
-    private final TrajectoryDrawingViewController trajectoryViewController;
+    private final TrajectoryDrawingViewController trajectoryDrawingViewController;
 
     public MainViewController(Activity activity) {
         this.activity = activity;
@@ -56,7 +56,9 @@ public class MainViewController implements MainControllerObserver {
         LocationController locationController = new LocationController(activity);
         PersistenceManager persistenceManager = new PersistenceManager(activity);
         controller = new MainController(locationController,persistenceManager);
-        trajectoryViewController = new TrajectoryDrawingViewController();
+        trajectoryDrawingViewController = new TrajectoryDrawingViewController();
+
+        trajectoryImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
 
         controller.addObservers(this);
 
@@ -123,7 +125,7 @@ public class MainViewController implements MainControllerObserver {
 
     @Override
     public void setTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
-        trajectoryImageView.setImageBitmap(trajectoryViewController.getTrajectoryBITMAP(latitudes,longitudes));
+        trajectoryImageView.setImageBitmap(trajectoryDrawingViewController.getTrajectoryBITMAP(latitudes,longitudes));
     }
 
     @Override

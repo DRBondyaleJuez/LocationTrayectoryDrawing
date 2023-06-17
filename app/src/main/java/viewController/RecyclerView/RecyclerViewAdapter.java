@@ -51,7 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(final View view) {
             super(view);
             trajectoryFileCheckBox = view.findViewById(R.id.trajectoryFileCheckBox);
-
+            trajectoryFileCheckBox.setChecked(recyclerViewController.getSelectAllCheckBoxState());
             trajectoryFileCheckBox.setOnCheckedChangeListener(setOnTrajectoryCheckBoxChange());
             recyclerViewController.addViewHolder(this);
         }

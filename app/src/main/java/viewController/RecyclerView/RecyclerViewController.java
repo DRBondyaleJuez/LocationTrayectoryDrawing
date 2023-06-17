@@ -50,17 +50,21 @@ public class RecyclerViewController {
         trajectoryVisualizerRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    public RecyclerView getTrajectoryVisualizerRecyclerViewRecyclerView() {
-        return trajectoryVisualizerRecyclerView;
+    public boolean getSelectAllCheckBoxState(){
+        return trajectoriesVisualizerViewController.getSelectAllCheckBoxState();
     }
 
     //Methods related to clicking on the recyclerView
     public void trajectoryFileChecked(int position) {
-        trajectoriesVisualizerViewController.trajectoryFileChecked(position);
+        if(position > -1) {
+            trajectoriesVisualizerViewController.trajectoryFileChecked(position);
+        }
     }
 
     public void trajectoryFileUnchecked(int position) {
-        trajectoriesVisualizerViewController.trajectoryFileUnChecked(position);
+        if(position>-1) {
+            trajectoriesVisualizerViewController.trajectoryFileUnChecked(position);
+        }
     }
 
     public void addViewHolder(RecyclerViewAdapter.MyViewHolder viewHolder){

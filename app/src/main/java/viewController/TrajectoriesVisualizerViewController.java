@@ -70,6 +70,12 @@ public class TrajectoriesVisualizerViewController {
             noFileTextView.setVisibility(View.VISIBLE);
             trajectoryFilesRecyclerView.setVisibility(View.GONE);
         }
+
+        trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
+    }
+
+    public boolean getSelectAllCheckBoxState(){
+        return selectAllCheckBox.isChecked();
     }
 
     private CompoundButton.OnCheckedChangeListener setSelectedAllCheckChange() {
@@ -91,7 +97,11 @@ public class TrajectoriesVisualizerViewController {
 
                 ArrayList<Trajectory> selectedTrajectories = controller.getSelectedTrajectories();
 
-                trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.getSelectedTrajectoriesBITMAP(selectedTrajectories));
+                if(selectedTrajectories.isEmpty()){
+                    trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
+                } else {
+                    trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.getSelectedTrajectoriesBITMAP(selectedTrajectories));
+                }
 
             }
         };
@@ -130,7 +140,7 @@ public class TrajectoriesVisualizerViewController {
                     noFileTextView.setVisibility(View.VISIBLE);
                     trajectoryFilesRecyclerView.setVisibility(View.GONE);
                 }
-                //Maybe redoBitmap
+                //Redraw black square
                 trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
             }
         };

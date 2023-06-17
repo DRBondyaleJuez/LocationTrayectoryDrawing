@@ -50,41 +50,6 @@ public class TrajectoryDrawingViewController {
 
     }
 
-    private Bitmap drawMultipleTrajectoriesTogether(int numberOfTrajectories, int[] xCoordinates, int[] yCoordinates) {
-        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
-        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(currentBitmap);
-
-        float hueUnit = 300/numberOfTrajectories;
-        int trajectoryNumber = 1;
-
-        if(xCoordinates.length > 1) {
-            for (int i = 0; i < xCoordinates.length - 1; i++) {
-                float[] hsv ={hueUnit*trajectoryNumber,100,100};
-                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
-                if(xCoordinates[i] == INDICATOR_OF_NEW_TRAJECTORY || xCoordinates[i+1] == INDICATOR_OF_NEW_TRAJECTORY){
-                    trajectoryNumber++;
-                    continue;
-                }
-                Paint currentPaint = new Paint();
-                currentPaint.setColor(Color.HSVToColor(hsv));
-                currentPaint.setStrokeWidth(10);
-
-                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
-            }
-        }
-
-        return currentBitmap;
-    }
-
-    public Bitmap drawEmptyBlackSquare(){
-            //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
-            Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
-            Canvas canvas = new Canvas(currentBitmap);
-
-        return currentBitmap;
-    }
-
     private Bitmap drawTrajectory(int[] xCoordinates, int[] yCoordinates){
         //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
         Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
@@ -111,16 +76,52 @@ public class TrajectoryDrawingViewController {
                 float[] hsv ={hueUnit*i,100,100};
                 Paint currentPaint = new Paint();
                 currentPaint.setColor(Color.HSVToColor(hsv));
-                currentPaint.setStrokeWidth(10);
+                currentPaint.setAlpha(180);
+                currentPaint.setStrokeWidth(20);
+
+                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
+            }
+        }
+        //viewController.setTrajectory(currentBitmap);
+        return currentBitmap;
+    }
+
+    private Bitmap drawMultipleTrajectoriesTogether(int numberOfTrajectories, int[] xCoordinates, int[] yCoordinates) {
+        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
+        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(currentBitmap);
+
+        float hueUnit = 300/numberOfTrajectories;
+        int trajectoryNumber = 1;
+
+        if(xCoordinates.length > 1) {
+            for (int i = 0; i < xCoordinates.length - 1; i++) {
+                float[] hsv ={hueUnit*trajectoryNumber,100,100};
+                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
+                if(xCoordinates[i] == INDICATOR_OF_NEW_TRAJECTORY || xCoordinates[i+1] == INDICATOR_OF_NEW_TRAJECTORY){
+                    trajectoryNumber++;
+                    continue;
+                }
+                Paint currentPaint = new Paint();
+                currentPaint.setColor(Color.HSVToColor(hsv));
+                currentPaint.setAlpha(150);
+                currentPaint.setStrokeWidth(20);
 
                 canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
             }
         }
 
-
-        //viewController.setTrajectory(currentBitmap);
         return currentBitmap;
     }
+
+    public Bitmap drawEmptyBlackSquare(){
+        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
+        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(currentBitmap);
+
+        return currentBitmap;
+    }
+
     /*
     public void setTrajectory(Bitmap currentTrajectory){
         viewController.setTrajectory(currentTrajectory);
