@@ -13,6 +13,7 @@ public class TrajectoryDrawingViewController {
 
     private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
     private static final double INDICATOR_OF_NEW_TRAJECTORY = -2001;
+    private static final int HUE_MAX_VALUE = 320;
     private static int BITMAP_SIZE = 5000;
     private static int SQUARE_SIZE = 50;
     private static int ADJUSTED_BITMAP_SIZE = BITMAP_SIZE-SQUARE_SIZE;
@@ -67,13 +68,15 @@ public class TrajectoryDrawingViewController {
             canvas.drawRect(ourRect,blue);
         }
  */
-        float hueUnit = 340/xCoordinates.length;
-
+        float hueUnit = 1 + HUE_MAX_VALUE/xCoordinates.length;
+        int frequencyOfColorChange = 1 + xCoordinates.length/HUE_MAX_VALUE;
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>------------------------" + hueUnit);
         if(xCoordinates.length > 1) {
             for (int i = 0; i < xCoordinates.length - 1; i++) {
                 if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
 
-                float[] hsv ={hueUnit*i,100,100};
+                float[] hsv ={hueUnit*i/frequencyOfColorChange,100,100};
+
                 Paint currentPaint = new Paint();
                 currentPaint.setColor(Color.HSVToColor(hsv));
                 currentPaint.setAlpha(180);
@@ -91,7 +94,7 @@ public class TrajectoryDrawingViewController {
         Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(currentBitmap);
 
-        float hueUnit = 300/numberOfTrajectories;
+        float hueUnit = HUE_MAX_VALUE/numberOfTrajectories;
         int trajectoryNumber = 1;
 
         if(xCoordinates.length > 1) {
