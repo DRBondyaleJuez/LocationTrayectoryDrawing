@@ -1,6 +1,7 @@
 package controller;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,7 @@ public class MainController implements LocationControllerObserver, MainControlle
     private static final int NUMBER_OF_POINTS_PER_TRAJECTORY = 3;
     private static final int AMOUNT_OF_DATA_IN_DISPLAY = 10;
 
-    //COMPLMENTARY CONTROLLERS
+    //COMPLEMENTARY CONTROLLERS
     private final LocationController locationController;
     private DirectionCalculator directionCalculator;
     private final PersistenceManager persistenceManager;
@@ -37,9 +38,11 @@ public class MainController implements LocationControllerObserver, MainControlle
     private final ArrayList<Double> longitudes;
     private ArrayList<Double> bufferLongitudes;
     private ArrayList<double[]> directionsBuffer;
+    private final ArrayList<Double> punctualDistances;
     private final ArrayList<Double> altitudes;
     private final ArrayList<Float> speeds;
     private ArrayList<DirectionEnum> directions;
+    private double totalDistance;
 
     //OBSERVERS
     private ArrayList<MainControllerObserver> observers;
@@ -55,9 +58,11 @@ public class MainController implements LocationControllerObserver, MainControlle
         bufferLatitudes = new ArrayList<>();
         longitudes = new ArrayList<>();
         bufferLongitudes = new ArrayList<>();
+        punctualDistances = new ArrayList<>();
         altitudes = new ArrayList<>();
         speeds = new ArrayList<>();
         observers = new ArrayList<>();
+        totalDistance = 0.0;
 
         directionsBuffer = new ArrayList<>();
         directions = new ArrayList<>();
@@ -76,6 +81,7 @@ public class MainController implements LocationControllerObserver, MainControlle
         locationController.stopContinuousLocationUpdate();
         latitudes.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
         longitudes.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
+        punctualDistances.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
 
     }
 
@@ -94,36 +100,6 @@ public class MainController implements LocationControllerObserver, MainControlle
             data = data + latitudes.get(i) + ";" + longitudes.get(i) + "\n";
         }
         return persistenceManager.saveData(filename,data);
-    }
-
-    private String buildDoubleListString(ArrayList<Double> dataList){
-        String dataListString = "";
-        int numberOfDataLines = dataList.size();
-        if(dataList.size() > 10) numberOfDataLines = AMOUNT_OF_DATA_IN_DISPLAY;
-        for (int i = 0; i < numberOfDataLines; i++) {
-            int currentIndex = dataList.size() - 1 - i;
-            if(dataList.get(currentIndex) <= DEFAULT_DOUBLE_STOP_OR_ABSENCE){
-                dataListString = dataListString.concat(" -- " + "\n");
-            } else {
-                dataListString = dataListString.concat(dataList.get(currentIndex).toString() + "\n");
-            }
-        }
-        return dataListString;
-    }
-
-    private String buildFloatListString(ArrayList<Float> dataList){
-        String dataListString = "";
-        int numberOfDataLines = dataList.size();
-        if(dataList.size() > AMOUNT_OF_DATA_IN_DISPLAY) numberOfDataLines = AMOUNT_OF_DATA_IN_DISPLAY;
-        for (int i = 0; i < numberOfDataLines; i++) {
-            int currentIndex = dataList.size() - 1 - i;
-            if(dataList.get(currentIndex) < 0){
-                dataListString = dataListString.concat(" -- " + "\n");
-            } else {
-                dataListString = dataListString.concat(dataList.get(currentIndex).toString() + "\n");
-            }
-        }
-        return dataListString;
     }
 
     @Override
@@ -161,6 +137,12 @@ public class MainController implements LocationControllerObserver, MainControlle
             longitudes.add(lonSum/BUFFER_SIZE_FOR_MEAN);
             bufferLongitudes.clear();
 
+            if(latitudes.size() >= 2) {
+                calculateAndSetPunctualDistances();
+            } else {
+                punctualDistances.add(0.0);
+            }
+            sendNumberOfPoints();
             sendLocationInformation();
         }
     }
@@ -192,6 +174,75 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
+    public void calculateAndSetPunctualDistances(){
+
+            Double currentLatitude = latitudes.get(latitudes.size()-1);
+            Double previousLatitude = latitudes.get(latitudes.size()-2);
+            if(previousLatitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLatitude = latitudes.get(latitudes.size()-3);
+            Double currentLongitude = longitudes.get(longitudes.size()-1);
+            Double previousLongitude = longitudes.get(longitudes.size()-2);
+            if(previousLongitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLongitude = latitudes.get(longitudes.size()-3);
+            Double newDistance = calculateNewDistance(currentLatitude,currentLongitude,previousLatitude,previousLongitude);
+
+            punctualDistances.add(newDistance);
+            totalDistance += newDistance;
+
+            sendDistanceInformation();
+    }
+
+    private Double calculateNewDistance(Double currentLatitude, Double currentLongitude, Double previousLatitude, Double previousLongitude) {
+
+        //CALCULATING DISTANCE FOLLOWING TH HAVERSINE FORMULA --- https://mathworld.wolfram.com/Haversine.html
+
+        double EARTH_RADIUS = 6371.0; // Earth's radius in kilometers
+
+        double dLat = Math.toRadians(currentLatitude - previousLatitude);
+        double dLon = Math.toRadians(currentLongitude - previousLongitude);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(previousLatitude)) * Math.cos(Math.toRadians(currentLatitude))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        double distance = EARTH_RADIUS * c * 1000;
+            return distance;
+    }
+
+    private String buildDoubleListString(ArrayList<Double> dataList){
+        String dataListString = "";
+        int numberOfDataLines = dataList.size();
+        if(dataList.size() > 10) numberOfDataLines = AMOUNT_OF_DATA_IN_DISPLAY;
+        for (int i = 0; i < numberOfDataLines; i++) {
+            int currentIndex = dataList.size() - 1 - i;
+            if(dataList.get(currentIndex) <= DEFAULT_DOUBLE_STOP_OR_ABSENCE){
+                dataListString = dataListString.concat(" -- " + "\n");
+            } else {
+
+                DecimalFormat df = new DecimalFormat("0." + "000000");
+                String roundedDouble = df.format(dataList.get(currentIndex));
+
+                dataListString = dataListString.concat(roundedDouble + "\n");
+            }
+        }
+        return dataListString;
+    }
+
+    private String buildFloatListString(ArrayList<Float> dataList){
+        String dataListString = "";
+        int numberOfDataLines = dataList.size();
+        if(dataList.size() > AMOUNT_OF_DATA_IN_DISPLAY) numberOfDataLines = AMOUNT_OF_DATA_IN_DISPLAY;
+        for (int i = 0; i < numberOfDataLines; i++) {
+            int currentIndex = dataList.size() - 1 - i;
+            if(dataList.get(currentIndex) < 0){
+                dataListString = dataListString.concat(" -- " + "\n");
+            } else {
+                dataListString = dataListString.concat(dataList.get(currentIndex).toString() + "\n");
+            }
+        }
+        return dataListString;
+    }
+
     private void sendLocationInformation(){
 
         //CALLING OBSERVERS
@@ -214,6 +265,20 @@ public class MainController implements LocationControllerObserver, MainControlle
             } else {
                 observer.setDirection(directions.subList(directions.size()-AMOUNT_OF_DATA_IN_DISPLAY,directions.size()-1));
             }
+        }
+    }
+
+    private void sendDistanceInformation(){
+        //CALLING OBSERVERS
+        for (MainControllerObserver observer: observers) {
+            observer.setDistances(totalDistance,buildDoubleListString(punctualDistances));
+        }
+    }
+
+    private void sendNumberOfPoints(){
+        //CALLING OBSERVERS
+        for (MainControllerObserver observer: observers) {
+            observer.setNumberOfPoints(latitudes.size());
         }
     }
 }

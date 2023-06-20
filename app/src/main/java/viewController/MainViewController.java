@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.locationtrayectorydrawing.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,6 +120,7 @@ public class MainViewController implements MainControllerObserver {
     private void setEmptyLocationInfo() {
         latitudeTextView.setText(" -- ");
         longitudeTextView.setText(" -- ");
+        punctualDistanceTextView.setText(" -- ");
     }
 
 
@@ -149,6 +151,11 @@ public class MainViewController implements MainControllerObserver {
 
     @Override
     public void setDistances(double totalDistance, String currentPunctualDistances) {
-        totalDistanceTextView.setText("Total distance covered:  " + totalDistance);
+
+        DecimalFormat df = new DecimalFormat("#." + "00");
+        String roundedTotalDistance = df.format(totalDistance);
+
+        totalDistanceTextView.setText("Total distance covered:  " + roundedTotalDistance);
+        punctualDistanceTextView.setText(currentPunctualDistances);
     }
 }
