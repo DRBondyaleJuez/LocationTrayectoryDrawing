@@ -181,7 +181,7 @@ public class MainViewController implements MainControllerObserver {
     @Override
     public void setDistances(double totalDistance, double distanceFromOrigin, String currentPunctualDistances) {
 
-        DecimalFormat df = new DecimalFormat("#." + "00");
+        DecimalFormat df = new DecimalFormat("0." + "00");
         String roundedTotalDistance = df.format(totalDistance);
 
         totalDistanceTextView.setText("Total covered (m):  " + roundedTotalDistance);

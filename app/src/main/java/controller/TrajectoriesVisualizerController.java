@@ -2,6 +2,10 @@ package controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import model.Trajectory;
 import persistence.PersistenceManager;
@@ -24,7 +28,7 @@ public class TrajectoriesVisualizerController {
     public ArrayList<String> getAllFilenames(){
         ArrayList<String> filenameList = new ArrayList<>();
         for (File currentFile:trajectoryFileList) {
-            if(currentFile.getName().contains("Trajectory")) {
+            if(currentFile.getName().contains(persistenceManager.getEXTENSION())) {
                 filenameList.add(currentFile.getName());
             }
         }
@@ -32,14 +36,26 @@ public class TrajectoriesVisualizerController {
     }
 
     private File[] collectTrajectoryFiles() {
-        return persistenceManager.getAllFiles();
+
+        File[] files = persistenceManager.getAllFiles();
+
+        Comparator<File> comparator = new Comparator<File>() {
+            @Override
+            public int compare(File file1, File file2) {
+                return file1.getName().compareTo(file2.getName())*-1; //Multiplied by -1 to sort it alphabetically inverse
+            }
+        };
+
+        Arrays.sort(files, comparator);
+
+        return files;
     }
     private void buildTrajectoryList() {
 
         trajectoryList.clear();
 
         for (File currentFile:trajectoryFileList) {
-            if(currentFile.getName().contains("Trajectory")) {
+            if(currentFile.getName().contains(persistenceManager.getEXTENSION())) {
                 Trajectory currentTrajectory = extractTrajectoryFromFile(currentFile);
                 trajectoryList.add(currentTrajectory);
             }
@@ -99,7 +115,7 @@ public class TrajectoriesVisualizerController {
         for (int i = 0; i < trajectoryFileList.length; i++) {
             if(trajectoryList.get(i).isChecked()){
                 String currentFilename = trajectoryFileList[i].getName();
-                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EVLAUATING FILE FOR DELETION: " + currentFilename);
+                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EVALUATING FILE FOR DELETION: " + currentFilename);
                 if(trajectoryFileList[i].delete()){
                     deletedFiles.add(currentFilename);
                 } else {

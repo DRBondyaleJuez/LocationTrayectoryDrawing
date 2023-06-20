@@ -18,7 +18,7 @@ public class PersistenceManager {
 
     private Activity mainActivity;
     private static String STORAGE_PATH = "/trajectory_files/";
-    private static String EXTENSION = ".txt";
+    private static String EXTENSION = ".trajectory";
     public PersistenceManager(Activity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -82,7 +82,7 @@ public class PersistenceManager {
         File[] filesInDirectory = directory.listFiles();
         ArrayList<File> filteredFileList = new ArrayList<>();
         for (File currentFile:filesInDirectory) {
-            if(currentFile.getName().contains("Trajectory")){
+            if(currentFile.getName().contains(EXTENSION)){
                 filteredFileList.add(currentFile);
             }
         }
@@ -90,5 +90,9 @@ public class PersistenceManager {
         filesInDirectory = filteredFileList.toArray(new File[filteredFileList.size()]);
 
         return filesInDirectory;
+    }
+
+    public String getEXTENSION(){
+        return EXTENSION;
     }
 }
