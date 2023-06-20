@@ -26,12 +26,14 @@ public class MainViewController implements MainControllerObserver {
     //ViewComponents
     private TextView latitudeTextView;
     private TextView longitudeTextView;
+    private TextView punctualDistanceTextView;
+    private TextView numberOfPointsTextView;
+    private TextView totalDistanceTextView;
     private TextView directionsTextView;
     private final Button saveDataButton;
     private final Button goToVisualizerButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
-
 
     // View controller attributes
     private final MainController controller;
@@ -43,6 +45,9 @@ public class MainViewController implements MainControllerObserver {
         //Initializing and setting View components associated to view elements
         latitudeTextView = activity.findViewById(R.id.latitudeTextView);
         longitudeTextView = activity.findViewById(R.id.longitudeTextView);
+        punctualDistanceTextView = activity.findViewById(R.id.punctualDistanceTextView);
+        numberOfPointsTextView = activity.findViewById(R.id.numberOfPointsTextView);
+        totalDistanceTextView = activity.findViewById(R.id.totalDistanceTextView);
         directionsTextView = activity.findViewById(R.id.directionTextView);
         continuousLocationSwitch = activity.findViewById(R.id.continuousLocationSwitch);
         continuousLocationSwitch.setOnClickListener(setOnClickContinuousLocationFinder());
@@ -135,5 +140,15 @@ public class MainViewController implements MainControllerObserver {
             directionsString.append(directionEnum.getSymbol() + "  ||  ");
         }
         directionsTextView.setText(directionsString);
+    }
+
+    @Override
+    public void setNumberOfPoints(int numberOfPoints) {
+        numberOfPointsTextView.setText("Nº of Points: " + numberOfPoints);
+    }
+
+    @Override
+    public void setDistances(double totalDistance, String currentPunctualDistances) {
+        totalDistanceTextView.setText("Total distance covered:  " + totalDistance);
     }
 }

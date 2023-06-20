@@ -12,4 +12,8 @@ public interface MainControllerObserver {
     void setTrajectory(ArrayList<Double> latitudes, ArrayList<Double> longitudes);
 
     void setDirection(List<DirectionEnum> subList);
+
+    void setNumberOfPoints(int numberOfPoints);
+
+    void setDistances(double totalDistance, String currentPunctualDistances);
 }
