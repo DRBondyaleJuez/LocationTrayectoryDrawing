@@ -34,6 +34,7 @@ public class MainViewController implements MainControllerObserver {
     private TextView directionsTextView;
     private final Button saveDataButton;
     private final Button goToVisualizerButton;
+    private final Button restartButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
 
@@ -58,7 +59,10 @@ public class MainViewController implements MainControllerObserver {
         saveDataButton.setOnClickListener(setOnClickSaveData());
         goToVisualizerButton = activity.findViewById(R.id.goToVisualizerButton);
         goToVisualizerButton.setOnClickListener(setOnClickChangeView());
+        restartButton = activity.findViewById(R.id.restartButton);
+        restartButton.setOnClickListener(setOnClickRestart());
         trajectoryImageView = activity.findViewById(R.id.trajectoryImageView);
+
 
         //Building the controller
         LocationController locationController = new LocationController(activity);
@@ -70,6 +74,28 @@ public class MainViewController implements MainControllerObserver {
 
         controller.addObservers(this);
 
+    }
+
+    private View.OnClickListener setOnClickRestart() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                continuousLocationSwitch.setChecked(false);
+                continuousLocationSwitchChange();
+
+                trajectoryImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
+
+                controller.restart();
+                directionsTextView.setText("directions");
+                latitudeTextView.setText("latitudeValues");
+                longitudeTextView.setText("longitudeValues");
+                punctualDistanceTextView.setText("distanceValues");
+                distanceFromOriginTextView.setText("From origin (m): 0.0");
+                totalDistanceTextView.setText(" Total covered (m): 0.0");
+                numberOfPointsTextView.setText("Nº of Points: \n 0");
+            }
+        };
     }
 
     private View.OnClickListener setOnClickChangeView() {
@@ -148,7 +174,7 @@ public class MainViewController implements MainControllerObserver {
 
     @Override
     public void setNumberOfPoints(int numberOfPoints) {
-        numberOfPointsTextView.setText("Nº of Points: " + numberOfPoints);
+        numberOfPointsTextView.setText("Nº of Points: \n" + numberOfPoints);
     }
 
     @Override

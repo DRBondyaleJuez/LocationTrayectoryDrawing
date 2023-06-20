@@ -284,6 +284,19 @@ public class MainController implements LocationControllerObserver, MainControlle
             observer.setNumberOfPoints(latitudes.size());
         }
     }
+
+    public void restart() {
+        latitudes.clear();
+        bufferLatitudes.clear();
+        longitudes.clear();
+        bufferLongitudes.clear();
+        punctualDistances.clear();
+        altitudes.clear();
+        speeds.clear();
+        totalDistance = 0.0;
+        directions.clear();
+        directionsBuffer.clear();
+    }
 }
 
 
