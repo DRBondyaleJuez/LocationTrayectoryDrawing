@@ -43,6 +43,7 @@ public class MainController implements LocationControllerObserver, MainControlle
     private final ArrayList<Float> speeds;
     private ArrayList<DirectionEnum> directions;
     private double totalDistance;
+    private double distanceFromOrigin;
 
     //OBSERVERS
     private ArrayList<MainControllerObserver> observers;
@@ -63,6 +64,7 @@ public class MainController implements LocationControllerObserver, MainControlle
         speeds = new ArrayList<>();
         observers = new ArrayList<>();
         totalDistance = 0.0;
+        distanceFromOrigin = 0.0;
 
         directionsBuffer = new ArrayList<>();
         directions = new ArrayList<>();
@@ -184,6 +186,7 @@ public class MainController implements LocationControllerObserver, MainControlle
             if(previousLongitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLongitude = latitudes.get(longitudes.size()-3);
             Double newDistance = calculateNewDistance(currentLatitude,currentLongitude,previousLatitude,previousLongitude);
 
+            distanceFromOrigin = calculateNewDistance(currentLatitude,currentLongitude,latitudes.get(0),longitudes.get(0));
             punctualDistances.add(newDistance);
             totalDistance += newDistance;
 
@@ -271,7 +274,7 @@ public class MainController implements LocationControllerObserver, MainControlle
     private void sendDistanceInformation(){
         //CALLING OBSERVERS
         for (MainControllerObserver observer: observers) {
-            observer.setDistances(totalDistance,buildDoubleListString(punctualDistances));
+            observer.setDistances(totalDistance,distanceFromOrigin,buildDoubleListString(punctualDistances));
         }
     }
 

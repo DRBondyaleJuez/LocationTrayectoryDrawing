@@ -15,5 +15,5 @@ public interface MainControllerObserver {
 
     void setNumberOfPoints(int numberOfPoints);
 
-    void setDistances(double totalDistance, String currentPunctualDistances);
+    void setDistances(double totalDistance, double distanceFromOrigin, String currentPunctualDistances);
 }

@@ -30,6 +30,7 @@ public class MainViewController implements MainControllerObserver {
     private TextView punctualDistanceTextView;
     private TextView numberOfPointsTextView;
     private TextView totalDistanceTextView;
+    private TextView distanceFromOriginTextView;
     private TextView directionsTextView;
     private final Button saveDataButton;
     private final Button goToVisualizerButton;
@@ -49,6 +50,7 @@ public class MainViewController implements MainControllerObserver {
         punctualDistanceTextView = activity.findViewById(R.id.punctualDistanceTextView);
         numberOfPointsTextView = activity.findViewById(R.id.numberOfPointsTextView);
         totalDistanceTextView = activity.findViewById(R.id.totalDistanceTextView);
+        distanceFromOriginTextView = activity.findViewById(R.id.distanceFromOriginTextView);
         directionsTextView = activity.findViewById(R.id.directionTextView);
         continuousLocationSwitch = activity.findViewById(R.id.continuousLocationSwitch);
         continuousLocationSwitch.setOnClickListener(setOnClickContinuousLocationFinder());
@@ -150,12 +152,16 @@ public class MainViewController implements MainControllerObserver {
     }
 
     @Override
-    public void setDistances(double totalDistance, String currentPunctualDistances) {
+    public void setDistances(double totalDistance, double distanceFromOrigin, String currentPunctualDistances) {
 
         DecimalFormat df = new DecimalFormat("#." + "00");
         String roundedTotalDistance = df.format(totalDistance);
 
-        totalDistanceTextView.setText("Total distance covered:  " + roundedTotalDistance);
+        totalDistanceTextView.setText("Total covered (m):  " + roundedTotalDistance);
+
+        String roundedDistanceFromOrigin = df.format(distanceFromOrigin);
+        distanceFromOriginTextView.setText("From origin (m): " + roundedDistanceFromOrigin);
+
         punctualDistanceTextView.setText(currentPunctualDistances);
     }
 }
