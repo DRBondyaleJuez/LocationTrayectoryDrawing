@@ -6,4 +6,60 @@
     </style>
 
     <style name="Theme.LocationTrayectoryDrawing" parent="Base.Theme.LocationTrayectoryDrawing" />
+
+    <!-- SAVE BUTTON STYLE-->
+    <style name = "SaveButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/save_icon</item>
+        <item name="android:tint"> @color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">7dp</item>
+    </style>
+
+    <!-- REFRESH BUTTON STYLE-->
+    <style name = "RestartButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/refresh_icon</item>
+        <item name="android:tint"> @color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
+    <!-- VISUALIZER BUTTON STYLE-->
+    <style name = "VisualizerButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/visualizer_icon</item>
+        <item name="android:tint"> @color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
+    <!-- BACK TO TRACKER BUTTON STYLE-->
+    <style name = "BackToTrackerButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/track_location_icon</item>
+        <item name="tint">@color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">7dp</item>
+    </style>
+
+    <!-- DELETE BUTTON STYLE-->
+    <style name = "DeleteButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/delete_icon</item>
+        <item name="tint">@color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <!-- DISPLAY BUTTON STYLE-->
+    <style name = "DisplayButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="srcCompat">@drawable/line_icon</item>
+        <item name="tint">@color/white</item>
+        <item name="android:background">@drawable/dark_button_with_border</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">1dp</item>
+
+    </style>
+
 </resources>

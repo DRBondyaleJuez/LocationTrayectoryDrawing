@@ -3,6 +3,7 @@ package viewController;
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,9 +33,9 @@ public class MainViewController implements MainControllerObserver {
     private TextView totalDistanceTextView;
     private TextView distanceFromOriginTextView;
     private TextView directionsTextView;
-    private final Button saveDataButton;
-    private final Button goToVisualizerButton;
-    private final Button restartButton;
+    private final ImageButton saveDataButton;
+    private final ImageButton goToVisualizerButton;
+    private final ImageButton restartButton;
     private final Switch continuousLocationSwitch;
     private final ImageView trajectoryImageView;
 

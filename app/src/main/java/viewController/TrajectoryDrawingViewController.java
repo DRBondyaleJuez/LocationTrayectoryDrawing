@@ -14,7 +14,7 @@ public class TrajectoryDrawingViewController {
     private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
     private static final double INDICATOR_OF_NEW_TRAJECTORY = -2001;
     private static final int HUE_MAX_VALUE = 320;
-    private static final int RATIO_BETWEEN_DRAWING_AND_BORDER = 2;
+    private static final int RATIO_BETWEEN_DRAWING_AND_BORDER = 1;
     private static int BITMAP_SIZE = 5000;
     private static int SQUARE_SIZE = 50;
     private static int ADJUSTED_BITMAP_SIZE = BITMAP_SIZE-SQUARE_SIZE;

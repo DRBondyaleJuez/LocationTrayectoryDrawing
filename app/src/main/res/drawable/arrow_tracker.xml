@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/arrow_pointing_left"
+        android:gravity="left" />
+    <item
+        android:drawable="@drawable/track_location_icon"
+        android:gravity="right" />
+</layer-list>

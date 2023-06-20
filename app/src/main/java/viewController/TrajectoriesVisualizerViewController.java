@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +27,9 @@ public class TrajectoriesVisualizerViewController {
     private final Activity activity;
 
     //View Components
-    private final Button backToTrackerButton;
-    private final Button deleteButton;
-    private final Button displayButton;
+    private final ImageButton backToTrackerButton;
+    private final ImageButton deleteButton;
+    private final ImageButton displayButton;
     private final CheckBox selectAllCheckBox;
     private final ImageView trajectoryVisualizerImageView;
     private RecyclerView trajectoryFilesRecyclerView;

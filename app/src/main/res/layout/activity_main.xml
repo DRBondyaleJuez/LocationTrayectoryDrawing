@@ -13,13 +13,14 @@
 
 
 
-
     <ImageView
         android:id="@+id/trajectoryImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/no_description"
+        />
 
 
     <LinearLayout
@@ -31,10 +32,10 @@
 
         <!--LATITUDE  layout-->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="3"
+            android:layout_weight="1"
             >
 
             <EditText
@@ -43,29 +44,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.05"
                 android:ems="10"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:inputType="textPersonName"
-                android:text="LATITUDE"
+                android:text="@string/latitude_title"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/latitudeTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="latitudeValue"
+                android:text="@string/latitude_filler"
                 android:textAlignment="center"
-                android:textSize="11dp"/>
+                android:textSize="11sp"/>
 
         </LinearLayout>
 
         <!--LONGITUDE layout-->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="3"
+            android:layout_weight="1"
             >
 
 
@@ -75,9 +76,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.05"
                 android:ems="10"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:inputType="textPersonName"
-                android:text="LONGITUDE"
+                android:text="@string/longitude_title"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -86,19 +87,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="longitudeValue"
+                android:text="@string/latitude_filler"
                 android:textAlignment="center"
-                android:textSize="11dp"
+                android:textSize="11sp"
                 />
 
         </LinearLayout>
 
         <!--DISTANCE layout-->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="3"
+            android:layout_weight="1"
             >
 
             <EditText
@@ -107,9 +108,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.05"
                 android:ems="10"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:inputType="textPersonName"
-                android:text="DISTANCE (m)"
+                android:text="@string/distance_title"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -118,9 +119,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="punctualValue"
+                android:text="@string/distance_filler"
                 android:textAlignment="center"
-                android:textSize="11dp"/>
+                android:textSize="11sp"/>
 
         </LinearLayout>
 
@@ -135,29 +136,29 @@
 
         <TextView
             android:id="@+id/numberOfPointsTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.02"
-            android:text="Nº of Points: "
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/number_of_points"
             android:textAlignment="center"
+            android:layout_marginHorizontal="10dp"
             />
 
         <TextView
             android:id="@+id/totalDistanceTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.02"
-            android:text="Total covered (m):  "
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/total_distance"
             android:textAlignment="center"
+            android:layout_marginHorizontal="10dp"
             />
 
         <TextView
             android:id="@+id/distanceFromOriginTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.02"
-            android:text="From origin (m):  "
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/distance_from_origin"
             android:textAlignment="center"
+            android:layout_marginHorizontal="10dp"
             />
 
     </LinearLayout>
@@ -167,7 +168,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.02"
-        android:text="Directions"
+        android:text="@string/directions"
         android:textAlignment="center"
         />
 
@@ -178,7 +179,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.02"
         android:text="Display Location"
-
         android:textAlignment="center"
         android:textSize="20dp"
         android:paddingHorizontal="50dp"
@@ -190,38 +190,36 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_weight="0.02"
+        android:paddingHorizontal="20dp"
         >
 
-
-        <Button
+        <ImageButton
             android:id="@+id/saveDataButton"
+            style = "@style/SaveButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="SAVE DATA"
-            android:textSize="11dp"
-            android:layout_weight="0.25"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/no_description"
+            />
 
-        <Button
+        <ImageButton
             android:id="@+id/restartButton"
+            style = "@style/RestartButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="RESTART"
-            android:textSize="11dp"
-            android:layout_weight="0.1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/no_description"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/goToVisualizerButton"
+            style = "@style/VisualizerButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Go to Visualizer"
-            android:textSize="11dp"
-            android:layout_weight="0.5"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/no_description"/>
 
 
     </LinearLayout>

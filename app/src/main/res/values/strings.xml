@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">LocationTrayectoryDrawing</string>
+    <string name="latitude_title">LATITUDE</string>
+    <string name="latitude_filler">latitudeValue</string>
+    <string name="longitude_title">LONGITUDE</string>
+    <string name="longitude_filler">longitudeValue</string>
+    <string name="distance_title">DISTANCE (m)</string>
+    <string name="distance_filler">distanceValue</string>
+    <string name="number_of_points">Nº of Points</string>
+    <string name="total_distance">Total covered (m):</string>
+    <string name="distance_from_origin">From origin (m):</string>
+    <string name="directions">Directions</string>
+    <string name="no_description">NO_DESCRIPTION</string>
+    <string name="no_trajectory_file_saved">No Trajectory File Saved</string>
+    <string name="trajectory_file">Trajectory File:</string>
+    <string name="select_all">Select All</string>
 </resources>
