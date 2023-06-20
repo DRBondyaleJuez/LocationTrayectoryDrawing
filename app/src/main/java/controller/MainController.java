@@ -183,7 +183,7 @@ public class MainController implements LocationControllerObserver, MainControlle
             if(previousLatitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLatitude = latitudes.get(latitudes.size()-3);
             Double currentLongitude = longitudes.get(longitudes.size()-1);
             Double previousLongitude = longitudes.get(longitudes.size()-2);
-            if(previousLongitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLongitude = latitudes.get(longitudes.size()-3);
+            if(previousLongitude == DEFAULT_DOUBLE_STOP_OR_ABSENCE) previousLongitude = longitudes.get(longitudes.size()-3);
             Double newDistance = calculateNewDistance(currentLatitude,currentLongitude,previousLatitude,previousLongitude);
 
             distanceFromOrigin = calculateNewDistance(currentLatitude,currentLongitude,latitudes.get(0),longitudes.get(0));
