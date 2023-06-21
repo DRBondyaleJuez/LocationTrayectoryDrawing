@@ -18,6 +18,14 @@ import persistence.PersistenceManager;
 import viewController.MainControllerObservable;
 import viewController.MainControllerObserver;
 
+/**
+ * Provides the class that acts as a controller for the MainViewController in charge of providing
+ * logic, temporal storage of trajectory information, mediating between the persistence and the viewController.
+ * It also communicates with two complementary classes to calculate directions and to retrieve directions from the
+ * phones GPS system.
+ * It also implements interface acting as an observable for the viewController and as a observer of the
+ * LocationController
+ */
 public class MainController implements LocationControllerObserver, MainControllerObservable {
 
     //CONSTANTS
@@ -48,9 +56,15 @@ public class MainController implements LocationControllerObserver, MainControlle
     //OBSERVERS
     private ArrayList<MainControllerObserver> observers;
 
+    /**
+     * This is the constructor. Several attributes are initialized here. The locationController and the
+     * persistenceManager are provided since they are constructed with activity as attribute which is not
+     * needed here in the controller
+     * @param locationController LocationController object built with the activity already
+     * @param persistenceManager PersistenceManager object built with the activity already
+     */
     public MainController(LocationController locationController , PersistenceManager persistenceManager) {
         this.locationController = locationController;
-        locationController.addObservers(this);
         locationController.updateGPS();
 
         this.persistenceManager = persistenceManager;
@@ -68,6 +82,8 @@ public class MainController implements LocationControllerObserver, MainControlle
 
         directionsBuffer = new ArrayList<>();
         directions = new ArrayList<>();
+
+        locationController.addObservers(this);
     }
 
 
@@ -75,10 +91,18 @@ public class MainController implements LocationControllerObserver, MainControlle
         locationController.updateGPS();
     }
 
+    /**
+     * Start the continuous location exchange with the LocationController which will trigger the use
+     * of other methods in this class called by the locationController as observable
+     */
     public void startContinuousUpdateLocation() {
         locationController.startContinuousLocationUpdate();
     }
 
+    /**
+     * Stop the continuous location exchange with the LocationController and add a constant in the
+     * list of location parameters retrieved indicating the lack of information
+     */
     public void stopContinuousUpdateLocation() {
         locationController.stopContinuousLocationUpdate();
         latitudes.add(DEFAULT_DOUBLE_STOP_OR_ABSENCE);
@@ -87,6 +111,14 @@ public class MainController implements LocationControllerObserver, MainControlle
 
     }
 
+    /**
+     * Save the location parameters in the attributes using the PersistenceManager.
+     * <p>
+     *     To do this a filename is obtained based on the current date and time.
+     *     The data is converted to a String with a certain csv inspired format before storage
+     * </p>
+     * @return boolean confirming the success or failure of the operation
+     */
     public boolean saveData(){
         if(latitudes.size() < 1 || directions.size() < 1) return false;
 
@@ -104,6 +136,25 @@ public class MainController implements LocationControllerObserver, MainControlle
         return persistenceManager.saveData(filename,data);
     }
 
+    /**
+     * Restart triggered by the restart of the MainViewController. This implieas reset conditions
+     * similar to the beginning, clearing all containers and parameters
+     */
+    public void restart() {
+        latitudes.clear();
+        bufferLatitudes.clear();
+        longitudes.clear();
+        bufferLongitudes.clear();
+        punctualDistances.clear();
+        altitudes.clear();
+        speeds.clear();
+        totalDistance = 0.0;
+        directions.clear();
+        directionsBuffer.clear();
+    }
+
+
+    //Implementations of overridden methods of the MainControllerObservable and LocationControllerObserver interfaces
     @Override
     public void addObservers(MainControllerObserver observer) {
         observers.add(observer);
@@ -144,7 +195,6 @@ public class MainController implements LocationControllerObserver, MainControlle
             } else {
                 punctualDistances.add(0.0);
             }
-            sendNumberOfPoints();
             sendLocationInformation();
         }
     }
@@ -176,7 +226,11 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
-    public void calculateAndSetPunctualDistances(){
+    /**
+     * Call for the calculation of distances when a new location is added to determine the distance between this new location and the previous one.
+     * Also the addition of this new distance to the distances list attribute and calculating the distanceFromOrgin and the totalDistance
+     */
+    private void calculateAndSetPunctualDistances(){
 
             Double currentLatitude = latitudes.get(latitudes.size()-1);
             Double previousLatitude = latitudes.get(latitudes.size()-2);
@@ -193,6 +247,17 @@ public class MainController implements LocationControllerObserver, MainControlle
             sendDistanceInformation();
     }
 
+    /**
+     * Calculate distance between two points on a sphere provided the latitude and longitude.
+     * <p>
+     *     This calculation is based on the Haversine formula assuming Earth's radius is 6371km
+     * </p>
+     * @param currentLatitude Double corresponding to the final latitude
+     * @param currentLongitude Double corresponding to the final longitude
+     * @param previousLatitude Double corresponding to the initial latitude
+     * @param previousLongitude Double corresponding to the initial longitude
+     * @return Double corresponding to the result of the Haversine in km
+     */
     private Double calculateNewDistance(Double currentLatitude, Double currentLongitude, Double previousLatitude, Double previousLongitude) {
 
         //CALCULATING DISTANCE FOLLOWING TH HAVERSINE FORMULA --- https://mathworld.wolfram.com/Haversine.html
@@ -212,6 +277,12 @@ public class MainController implements LocationControllerObserver, MainControlle
             return distance;
     }
 
+    /**
+     * Translate the list of Doubles of the location parameters to line spaced String lists with the
+     * number of data to be displayed by the view based on the constant of this class.
+     * @param dataList ArrayList of Doubles to convert to String
+     * @return String of the converted list of doubles
+     */
     private String buildDoubleListString(ArrayList<Double> dataList){
         String dataListString = "";
         int numberOfDataLines = dataList.size();
@@ -231,6 +302,11 @@ public class MainController implements LocationControllerObserver, MainControlle
         return dataListString;
     }
 
+    /**
+     * Same as the other build method but with floats for the speed data
+     * @param dataList arraylist of floats to translate to String
+     * @return String corresponding to the number of values displayed from the list of floats
+     */
     private String buildFloatListString(ArrayList<Float> dataList){
         String dataListString = "";
         int numberOfDataLines = dataList.size();
@@ -246,6 +322,9 @@ public class MainController implements LocationControllerObserver, MainControlle
         return dataListString;
     }
 
+    /**
+     * Method to encapsulate the action commanded to the observers regarding location parameters
+     */
     private void sendLocationInformation(){
 
         //CALLING OBSERVERS
@@ -257,6 +336,9 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
+    /**
+     * Method to encapsulate the action commanded to the observers regarding directions
+     */
     private void sendDirectionInformation(){
 
         //CALLING OBSERVERS
@@ -271,6 +353,9 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
+    /**
+     * Method to encapsulate the action commanded to the observers regarding distances
+     */
     private void sendDistanceInformation(){
         //CALLING OBSERVERS
         for (MainControllerObserver observer: observers) {
@@ -278,25 +363,6 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
-    private void sendNumberOfPoints(){
-        //CALLING OBSERVERS
-        for (MainControllerObserver observer: observers) {
-            observer.setNumberOfPoints(latitudes.size());
-        }
-    }
-
-    public void restart() {
-        latitudes.clear();
-        bufferLatitudes.clear();
-        longitudes.clear();
-        bufferLongitudes.clear();
-        punctualDistances.clear();
-        altitudes.clear();
-        speeds.clear();
-        totalDistance = 0.0;
-        directions.clear();
-        directionsBuffer.clear();
-    }
 }
 
 

@@ -28,6 +28,10 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 
+/**
+ * Provides the objects in charged of communicating the phones GPS to retrieve the location information.
+ * It implements an observable interface to facilitate communication with observers such as the MainController
+ */
 public class LocationController implements LocationControllerObservable {
 
     private static final int INTERVAL_MILLIS = 100;
@@ -40,6 +44,10 @@ public class LocationController implements LocationControllerObservable {
     private ArrayList<LocationControllerObserver> observers;
 
 
+    /**
+     * This is the constructor.
+     * @param activity
+     */
     public LocationController(Activity activity) {
         this.activity = activity;
         locationRequest = createLocationRequest();
@@ -48,6 +56,9 @@ public class LocationController implements LocationControllerObservable {
         observers = new ArrayList<>();
     }
 
+    /**
+     *
+     */
     public void updateGPS() {
 
         //LOCATION ACTIVE SETTINGS REQUEST  - https://www.youtube.com/watch?v=dPqivAUK8ps
@@ -94,6 +105,9 @@ public class LocationController implements LocationControllerObservable {
         }
     }
 
+    /**
+     *
+     */
     public void startContinuousLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -102,11 +116,15 @@ public class LocationController implements LocationControllerObservable {
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
+    /**
+     *
+     */
     public void stopContinuousLocationUpdate() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    //https://www.youtube.com/watch?v=dPqivAUK8ps
+// --------------------------------------------------------------------------------------------------------
+// METHODS REQUIRE TO GET GPS LOCATION PARAMETERS BASED ON https://www.youtube.com/watch?v=dPqivAUK8ps
     private LocationRequest createLocationRequest() {
         return (new LocationRequest.Builder(
                 INTERVAL_MILLIS
@@ -143,7 +161,12 @@ public class LocationController implements LocationControllerObservable {
             }
         };
     }
+//--------------------------------------------------------------------------------------------------
 
+    /**
+     * Triggered action to submit updated information regarding location to the observers
+     * @param location
+     */
     private void updateLocationInfo(Location location) {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
@@ -164,6 +187,7 @@ public class LocationController implements LocationControllerObservable {
         }
     }
 
+    //implmentations of the abstract methods in the LocationControllerObservable interface
     @Override
     public void addObservers(LocationControllerObserver observer) {
         observers.add(observer);
