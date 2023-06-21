@@ -15,6 +15,9 @@ import com.locationtrayectorydrawing.R;
 import java.util.ArrayList;
 
 
+/**
+ * Provides the class required to fill the recyclerView correctly based on a particular xml layout
+ */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private final RecyclerViewController recyclerViewController;
@@ -51,15 +54,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(final View view) {
             super(view);
             trajectoryFileCheckBox = view.findViewById(R.id.trajectoryFileCheckBox);
-            trajectoryFileCheckBox.setChecked(recyclerViewController.getSelectAllCheckBoxState());
+            trajectoryFileCheckBox.setChecked(recyclerViewController.getSelectAllCheckBoxState()); //Verify the state of the selectAll checkBox before building the one inside
             trajectoryFileCheckBox.setOnCheckedChangeListener(setOnTrajectoryCheckBoxChange());
-            recyclerViewController.addViewHolder(this);
+            recyclerViewController.addViewHolder(this); //This line is to fill a lsit of ViewHolders in the RecyclerViewController and facilitate changes in here called by the RecycleViewHolder
         }
 
+        /**
+         * Changes the checkBox state based on a checkedStatus provided
+         * <p>
+         *     This was implemented to allow exterior actions to change this state. For example actions
+         *     outside the recyclerView like a select all checkBox
+         * </p>
+         * @param checkedStatus
+         */
         public void setTrajectoryFileCheckBox(boolean checkedStatus){
             trajectoryFileCheckBox.setChecked(checkedStatus);
         }
 
+        /**
+         * Provides the response when the checkBox of an element in the recyclerView changes which requires
+         * communicating this to the successive controllers (recycleViewController, viewController and controller)
+         * @return
+         */
         private CompoundButton.OnCheckedChangeListener setOnTrajectoryCheckBoxChange() {
             return new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -75,23 +91,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             };
         }
-
-        /*
-        private View.OnClickListener setOnClick (){
-            return new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    if (recyclerViewController != null) {
-                        int position = getAdapterPosition();
-
-                        if (position != RecyclerView.NO_POSITION) {
-                            recyclerViewController.onSongClicked(position);
-                        }
-                    }
-                }
-            };
-        }
-
-         */
     }
 }

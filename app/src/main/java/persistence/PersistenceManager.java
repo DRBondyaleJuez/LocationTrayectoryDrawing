@@ -13,16 +13,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Provides an intermediary between the controllers and file system of the phone
+ * to retrieve and store files that contain trajectory data
+ */
 public class PersistenceManager {
-
 
     private Activity mainActivity;
     private static String STORAGE_PATH = "/trajectory_files/";
     private static String EXTENSION = ".trajectory";
+
+
+    /**
+     * This is the constructor.
+     * @param mainActivity Activity type object that corresponds to the original
+     *                     activity that started the app. This allows to use certain
+     *                     methods and access the directory where paths are stored
+     */
     public PersistenceManager(Activity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
+
+    /**
+     * Store the trajectory data (latitude and longitude values) in the directory the activity
+     * has access to and displays a message if the process is completed.
+     * @param filename String of the name of the file without the extension which is added after
+     * @param data String of the latitudes and longitudes in a particular csv inspired format
+     * @return boolean corresponding to the success of the process
+     */
     public boolean saveData(String filename, String data){
 
         System.out.println("FILENAME: " + filename);
@@ -51,6 +70,12 @@ public class PersistenceManager {
         return false;
     }
 
+
+    /**
+     * Open a file a extract the String data contained
+     * @param filename String of the name of the file that is going to be opened
+     * @return String the content of the file
+     */
     public String loadData(String filename){
 
         FileInputStream fileInputStream = null;
@@ -77,6 +102,11 @@ public class PersistenceManager {
         return fileContent;
     }
 
+
+    /**
+     * Retrieve all the files in the directory in the form of a File object
+     * @return Array of Files contained in the directory
+     */
     public File[] getAllFiles() {
         File directory = mainActivity.getFilesDir();
         File[] filesInDirectory = directory.listFiles();
@@ -92,6 +122,10 @@ public class PersistenceManager {
         return filesInDirectory;
     }
 
+    /**
+     * Get the String value in the EXTENSION attribute of this class
+     * @return String assigned to the EXTENSION attribute
+     */
     public String getEXTENSION(){
         return EXTENSION;
     }

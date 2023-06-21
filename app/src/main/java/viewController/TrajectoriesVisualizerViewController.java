@@ -21,6 +21,10 @@ import model.Trajectory;
 import persistence.PersistenceManager;
 import viewController.RecyclerView.RecyclerViewController;
 
+/**
+ * Provides the object in charged of managing the interactions between the view associated with
+ * the multiple trajectories visualizer and the TrajectoriesVisualizerController and viceversa
+ */
 public class TrajectoriesVisualizerViewController {
 
     //Activity
@@ -40,6 +44,17 @@ public class TrajectoriesVisualizerViewController {
     private final TrajectoryDrawingViewController trajectoryDrawingViewController;
     private final RecyclerViewController recyclerViewController;
 
+    /**
+     * This is the constructor.
+     * <p>
+     *     Here the view components are initialized and assigned actions.
+     *     The complementary ViewControllers, persistence and the controller associated with this view are also
+     *     initialized here to retrieve the data that will be displayed in the recyclerView and draw it.
+     *     .
+     *     Some initial view properties are also modified accordingly.
+     * </p>
+     * @param activity Activity object associated with the app starting
+     */
     public TrajectoriesVisualizerViewController(Activity activity) {
         this.activity = activity;
 
@@ -75,10 +90,37 @@ public class TrajectoriesVisualizerViewController {
         trajectoryVisualizerImageView.setImageBitmap(trajectoryDrawingViewController.drawEmptyBlackSquare());
     }
 
+    /**
+     * Retrieve the information regarding the boolean state of the checkBox that can check all checkboxes
+     * @return boolean corresponding to the checked state of said checkbox
+     */
     public boolean getSelectAllCheckBoxState(){
         return selectAllCheckBox.isChecked();
     }
 
+    /**
+     * Communicate to the controller that a certain trajectory file displayed in the recyclerView has been checked
+     * @param position int the index of the file in the display and therefore index in the controller's storage
+     */
+    public void trajectoryFileChecked(int position) {
+        controller.trajectoryFileChecked(position);
+    }
+
+    /**
+     * Communicate to the controller that a certain trajectory file displayed in the recyclerView has been unchecked
+     * @param position int the index of the file in the display and therefore index in the controller's storage
+     */
+    public void trajectoryFileUnChecked(int position) {
+        controller.trajectoryFileUnchecked(position);
+    }
+
+    //Methods associated with events triggered by interactions with particular view elements
+
+    /**
+     * Set the response when the select all check box state changes either checked or unchecked.
+     * communicating this to the controller and the recycler view to acted accordingly
+     * @return
+     */
     private CompoundButton.OnCheckedChangeListener setSelectedAllCheckChange() {
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -90,6 +132,7 @@ public class TrajectoriesVisualizerViewController {
             }
         };
     }
+
 
     private View.OnClickListener setOnClickDisplayButton() {
         return new View.OnClickListener() {
@@ -158,11 +201,4 @@ public class TrajectoriesVisualizerViewController {
         };
     }
 
-    public void trajectoryFileChecked(int position) {
-        controller.trajectoryFileChecked(position);
-    }
-
-    public void trajectoryFileUnChecked(int position) {
-        controller.trajectoryFileUnchecked(position);
-    }
 }

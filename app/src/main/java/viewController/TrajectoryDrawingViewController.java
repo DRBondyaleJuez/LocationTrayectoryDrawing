@@ -9,12 +9,17 @@ import java.util.ArrayList;
 
 import model.Trajectory;
 
+/**
+ * Provides the class in charged of creating the trajectory display on a bitmap to provide to the view.
+ *
+ */
 public class TrajectoryDrawingViewController {
 
-    private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000;
-    private static final double INDICATOR_OF_NEW_TRAJECTORY = -2001;
-    private static final int HUE_MAX_VALUE = 320;
-    private static final int RATIO_BETWEEN_DRAWING_AND_BORDER = 1;
+    //CONSTANTS
+    private static final double DEFAULT_DOUBLE_STOP_OR_ABSENCE = -2000; //The value assigned to latitude and longitude values when the tracking is stopped or the data is absent
+    private static final double INDICATOR_OF_NEW_TRAJECTORY = -2001; //The value assigned to latitude and longitude values when during the display of multiple trajectories the provided data requires the indication of different trajectories
+    private static final int HUE_MAX_VALUE = 320; //The maximum value of the hue parameter in the HSV format use to assign colors
+    private static final int RATIO_BETWEEN_DRAWING_AND_BORDER = 1; //a compensation parameter to slightly modify the distance between the trajectories and the squares edge
     private static int BITMAP_SIZE = 5000;
     private static int SQUARE_SIZE = 50;
     private static int ADJUSTED_BITMAP_SIZE = BITMAP_SIZE-SQUARE_SIZE;
@@ -22,10 +27,24 @@ public class TrajectoryDrawingViewController {
 
     private Double previousMaxDistance;
 
+    /**
+     * This is the constructor.
+     * The attribute corresponding to the maximum distance found is initialized.
+     */
     public TrajectoryDrawingViewController( ) {
         previousMaxDistance = 0.0;
     }
 
+
+    /** Creates and return a BITMAP file corresponding to the representation of the trajectory described by the latitude and longitude data information
+     * <p>
+     *     This requires first to convert the latitude and longitude data to x and y coordinates for the canvas that will be drawn based on the attributes
+     *     and the maximum distance between points in the data.
+     * </p>
+     * @param latitudes Array list of Doubles corresponding to the latitude data that will be plotted
+     * @param longitudes Array list of Doubles corresponding to the longitude data that will be plotted
+     * @return Bitmap corresponding to the trajectory represented on a black canvas
+     */
     public Bitmap getTrajectoryBITMAP(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
         XYBitmapCoordinates xyBitmapCoordinates = getBitmapCoordinates(latitudes,longitudes);
@@ -33,6 +52,12 @@ public class TrajectoryDrawingViewController {
         return drawTrajectory(xyBitmapCoordinates.getXCoordinates(), xyBitmapCoordinates.getYCoordinates());
     }
 
+    /**
+     * Provides a Bitmap similar to the previous method but for multiple trajectory data encapsulated in the model
+     * class Trajectory
+     * @param selectedTrajectories Array list of the model class Trajectory with the data of selected files with trajectory data
+     * @return Bitmap corresponding to the trajectories selected represented on a black canvas
+     */
     public Bitmap getSelectedTrajectoriesBITMAP(ArrayList<Trajectory> selectedTrajectories) {
         //Prepare data for BITMAP creation
         ArrayList<Double> allLatitudesTogether = new ArrayList<>();
@@ -52,114 +77,27 @@ public class TrajectoryDrawingViewController {
 
     }
 
-    private Bitmap drawTrajectory(int[] xCoordinates, int[] yCoordinates){
-        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
-        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(currentBitmap);
 
-/*
-        for (int i = 0; i < xCoordinates.length; i++) {
-            Rect ourRect = new Rect();
-            ourRect.set(xCoordinates[i],yCoordinates[i],xCoordinates[i]+SQUARE_SIZE,yCoordinates[i]+SQUARE_SIZE);
-
-            Paint blue = new Paint();
-            blue.setColor(Color.BLUE);
-            blue.setStyle(Paint.Style.FILL);
-
-            canvas.drawRect(ourRect,blue);
-        }
- */
-        float hueUnit = 1 + HUE_MAX_VALUE/xCoordinates.length;
-        int frequencyOfColorChange = 1 + xCoordinates.length/HUE_MAX_VALUE;
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>------------------------" + hueUnit);
-        if(xCoordinates.length > 1) {
-            for (int i = 0; i < xCoordinates.length - 1; i++) {
-                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
-
-                float[] hsv ={hueUnit*i/frequencyOfColorChange,100,100};
-
-                Paint currentPaint = new Paint();
-                currentPaint.setColor(Color.HSVToColor(hsv));
-                currentPaint.setAlpha(180);
-                currentPaint.setStrokeWidth(20);
-
-                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
-            }
-        }
-        //viewController.setTrajectory(currentBitmap);
-        return currentBitmap;
-    }
-
-    private Bitmap drawMultipleTrajectoriesTogether(int numberOfTrajectories, int[] xCoordinates, int[] yCoordinates) {
-        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
-        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(currentBitmap);
-
-        float hueUnit = HUE_MAX_VALUE/numberOfTrajectories;
-        int trajectoryNumber = 1;
-
-        if(xCoordinates.length > 1) {
-            for (int i = 0; i < xCoordinates.length - 1; i++) {
-                float[] hsv ={hueUnit*trajectoryNumber,100,100};
-                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
-                if(xCoordinates[i] == INDICATOR_OF_NEW_TRAJECTORY || xCoordinates[i+1] == INDICATOR_OF_NEW_TRAJECTORY){
-                    trajectoryNumber++;
-                    continue;
-                }
-                Paint currentPaint = new Paint();
-                currentPaint.setColor(Color.HSVToColor(hsv));
-                currentPaint.setAlpha(150);
-                currentPaint.setStrokeWidth(20);
-
-                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
-            }
-        }
-
-        return currentBitmap;
-    }
-
+    /**
+     * Provides an Bitmap without any trajectories with the same black background. The previousMaxDistance
+     * is also set back to zero since normally this no trajectory representation is used in restart context.
+     * @return Bitmap black square without trajectories
+     */
     public Bitmap drawEmptyBlackSquare(){
-        //Bitmap currentBitmap = Bitmap.createBitmap(bitmapWidth,bitmapHeight);
         Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(currentBitmap);
 
         previousMaxDistance = 0.0;
 
         return currentBitmap;
     }
 
-    /*
-    public void setTrajectory(Bitmap currentTrajectory){
-        viewController.setTrajectory(currentTrajectory);
-    }
+    /**
+     * Calculate de x and y corresponding coordinates to the latitudes and longitudes data
+     * @param latitudes Array list of doubles corresponding to the latitude data
+     * @param longitudes Array list of doubles corresponding to the latitude data
+     * @return XYBitmapCoordinates object. This belongs to a nested class which agglutinates bot x and y coordinates basically.
      */
-
-    private static String hsvToRgb(float hue, float saturation, float value) {
-
-        int h = (int)(hue * 6);
-        float f = hue * 6 - h;
-        float p = value * (1 - saturation);
-        float q = value * (1 - f * saturation);
-        float t = value * (1 - (1 - f) * saturation);
-
-        switch (h) {
-            case 0: return rgbToString(value, t, p);
-            case 1: return rgbToString(q, value, p);
-            case 2: return rgbToString(p, value, t);
-            case 3: return rgbToString(p, q, value);
-            case 4: return rgbToString(t, p, value);
-            case 5: return rgbToString(value, p, q);
-            default: throw new RuntimeException("Something went wrong when converting from HSV to RGB. Input was " + hue + ", " + saturation + ", " + value);
-        }
-    }
-
-    private static String rgbToString(float r, float g, float b) {
-        String rs = Integer.toHexString((int)(r * 256));
-        String gs = Integer.toHexString((int)(g * 256));
-        String bs = Integer.toHexString((int)(b * 256));
-        return rs + gs + bs;
-    }
-
+    //Methodology to convert latitudes and longitudes to the appropriate x and y coordinates using the nested class XYBitmapCoordinates
     private XYBitmapCoordinates getBitmapCoordinates(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
         int lastIndex = latitudes.size()-1;
@@ -194,6 +132,17 @@ public class TrajectoryDrawingViewController {
         return new XYBitmapCoordinates(xCoordinatesInBitmap,yCoordinatesInBitmap);
     }
 
+    //Methodology to convert latitudes and longitudes of multiple trajectories to the appropriate x and y coordinates using the nested class XYBitmapCoordinates
+    /**
+     * Calculate de x and y corresponding coordinates to multiple latitudes and longitudes data
+     * <p>
+     *     The difference with the previous one has especially got to do with maxDisitance calculation correction which
+     *     does not employ the attribute required during tracking for persistence but needs to change when working with multiple sources
+     * </p>
+     * @param latitudes Array list of doubles corresponding to the latitude data
+     * @param longitudes Array list of doubles corresponding to the latitude data
+     * @return XYBitmapCoordinates object. This belongs to a nested class which agglutinates bot x and y coordinates basically.
+     */
     private XYBitmapCoordinates getBitmapCoordinatesMultipleTrajectories(ArrayList<Double> latitudes, ArrayList<Double> longitudes){
 
         double currentMaxDistance = 0.0;
@@ -231,7 +180,73 @@ public class TrajectoryDrawingViewController {
         return new XYBitmapCoordinates(xCoordinatesInBitmap,yCoordinatesInBitmap);
     }
 
-    public class XYBitmapCoordinates{
+    /**
+     * Drawing the trajectory on a bitmap. The color of the trajectory changes of hue as it is drawn
+     * @param xCoordinates Array of ints corresponding to the horizontal coordinate value for the vertex of the line drawn
+     * @param yCoordinates Array of ints corresponding to the vertical coordinate value for the vertex of the line drawn
+     * @return Bitmap with the trajectory drawn in the form of a line on a black background
+     */
+    private Bitmap drawTrajectory(int[] xCoordinates, int[] yCoordinates){
+        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(currentBitmap);
+
+        float hueUnit = 1 + HUE_MAX_VALUE/xCoordinates.length; //changing hue
+        int frequencyOfColorChange = 1 + xCoordinates.length/HUE_MAX_VALUE;
+        if(xCoordinates.length > 1) {
+            for (int i = 0; i < xCoordinates.length - 1; i++) {
+                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue; //"Blank" space left when the tracking is interrupted or location data absent
+
+                float[] hsv ={hueUnit*i/frequencyOfColorChange,100,100};//Changing hue
+
+                Paint currentPaint = new Paint();
+                currentPaint.setColor(Color.HSVToColor(hsv));
+                currentPaint.setAlpha(180);
+                currentPaint.setStrokeWidth(20);
+
+                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
+            }
+        }
+        return currentBitmap;
+    }
+
+    /**
+     * Drawing multiple trajectories on a bitmap. The color of the trajectory changes of hue with each trajectory
+     * @param xCoordinates Array of ints corresponding to the horizontal coordinate value for the vertex of the line drawn of every trajectory separated by a particular constant
+     * @param yCoordinates Array of ints corresponding to the vertical coordinate value for the vertex of the line drawn of every trajectory separated by a particular constant
+     * @return Bitmap with all trajectories drawn in the form of lines on a black background
+     */
+    private Bitmap drawMultipleTrajectoriesTogether(int numberOfTrajectories, int[] xCoordinates, int[] yCoordinates) {
+
+        Bitmap currentBitmap = Bitmap.createBitmap(BITMAP_SIZE, BITMAP_SIZE, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(currentBitmap);
+
+        float hueUnit = HUE_MAX_VALUE/numberOfTrajectories;
+        int trajectoryNumber = 1;
+
+        if(xCoordinates.length > 1) {
+            for (int i = 0; i < xCoordinates.length - 1; i++) {
+                float[] hsv ={hueUnit*trajectoryNumber,100,100};
+                if(xCoordinates[i] == DEFAULT_DOUBLE_STOP_OR_ABSENCE || xCoordinates[i+1] == DEFAULT_DOUBLE_STOP_OR_ABSENCE) continue;
+                if(xCoordinates[i] == INDICATOR_OF_NEW_TRAJECTORY || xCoordinates[i+1] == INDICATOR_OF_NEW_TRAJECTORY){
+                    trajectoryNumber++;
+                    continue;
+                }
+                Paint currentPaint = new Paint();
+                currentPaint.setColor(Color.HSVToColor(hsv));
+                currentPaint.setAlpha(150);
+                currentPaint.setStrokeWidth(20);
+
+                canvas.drawLine(xCoordinates[i], yCoordinates[i], xCoordinates[i+1], yCoordinates[i+1], currentPaint);
+            }
+        }
+
+        return currentBitmap;
+    }
+
+    /**
+     * Nested class to facilitate traffic of x and y Coordinates between methods in the class
+     */
+    private class XYBitmapCoordinates{
 
         private int[] xCoordinates;
         private int[] yCoordinates;
