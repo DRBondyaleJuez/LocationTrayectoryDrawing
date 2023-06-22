@@ -186,8 +186,10 @@ public class TrajectoriesVisualizerController {
         ArrayList<String> unableToDeleteFiles = new ArrayList<>();
 
         for (int i = 0; i < trajectoryFileList.length; i++) {
+
             if(trajectoryList.get(i).isChecked()){
                 String currentFilename = trajectoryFileList[i].getName();
+                System.out.println(trajectoryFileList[i].getPath());
                 if(trajectoryFileList[i].delete()){
                     deletedFiles.add(currentFilename);
                 } else {
@@ -208,7 +210,6 @@ public class TrajectoriesVisualizerController {
         return new FileDeletionResponse(completeDeletion,deletedFiles,unableToDeleteFiles);
     }
 
-    //
     /**
      * Nested class to handle the encapsulation of the response for the viewController when there is an attempt at deleting files
      */

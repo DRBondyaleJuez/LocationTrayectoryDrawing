@@ -19,9 +19,8 @@ import java.util.ArrayList;
  */
 public class PersistenceManager {
 
-    private Activity mainActivity;
-    private static String STORAGE_PATH = "/trajectory_files/";
-    private static String EXTENSION = ".trajectory";
+    private final Activity mainActivity;
+    private final static String EXTENSION = ".trajectory";
 
 
     /**
