@@ -119,7 +119,7 @@ public class TrajectoriesVisualizerViewController {
     /**
      * Set the response when the select all check box state changes either checked or unchecked.
      * communicating this to the controller and the recycler view to acted accordingly
-     * @return
+     * @return CompoundButton.OnCheckedChangeListener necessary for the action
      */
     private CompoundButton.OnCheckedChangeListener setSelectedAllCheckChange() {
         return new CompoundButton.OnCheckedChangeListener() {
@@ -133,7 +133,11 @@ public class TrajectoriesVisualizerViewController {
         };
     }
 
-
+    /**
+     * Set the response when the display button is clicked communicating this to the controller and
+     * the recycler view to acted accordingly
+     * @return View.OnClickListener necessary for the action
+     */
     private View.OnClickListener setOnClickDisplayButton() {
         return new View.OnClickListener() {
             @Override
@@ -151,6 +155,11 @@ public class TrajectoriesVisualizerViewController {
         };
     }
 
+    /**
+     * Set the response when the delete button is clicked communicating this to the controller and
+     * the recycler view to acted accordingly
+     * @return View.OnClickListener necessary for the action
+     */
     private View.OnClickListener setOnClickDeleteButton() {
 
         return new View.OnClickListener() {
@@ -191,6 +200,12 @@ public class TrajectoriesVisualizerViewController {
 
     }
 
+    /**
+     * Set the response when clicking the button to go to the tracker.
+     * This changes the contentView by the activity
+     * as well as initializing a MainViewController for this new view.
+     * @return View.OnClickListener necessary for the action
+     */
     private View.OnClickListener setOnClickChangeView() {
         return new View.OnClickListener() {
             @Override

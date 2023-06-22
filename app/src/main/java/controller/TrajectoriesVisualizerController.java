@@ -11,17 +11,20 @@ import model.Trajectory;
 import persistence.PersistenceManager;
 
 /**
- *
+ * Provides an object in charged of temporal storage of the data regarding the trajectory files stored by the app
+ * It serves as a controller of the TrajectoryVisualizerViewController
  */
 public class TrajectoriesVisualizerController {
 
-    PersistenceManager persistenceManager;
-    File[] trajectoryFileList;
-    ArrayList<Trajectory> trajectoryList;
+    private PersistenceManager persistenceManager;
+    private File[] trajectoryFileList;
+    private ArrayList<Trajectory> trajectoryList;
 
     /**
-     * This is the constructor.
-     * @param persistenceManager
+     * This is the constructor. Several attributes are initialized here. The file and trajectory lists
+     * are filled calling and the specific methods persistenceManager are provided since they are
+     * constructed with activity as attribute which is not needed here in the controller
+     * @param persistenceManager PersistenceManager object built with the activity already
      */
     public TrajectoriesVisualizerController(PersistenceManager persistenceManager) {
         this.persistenceManager = persistenceManager;
@@ -33,7 +36,11 @@ public class TrajectoriesVisualizerController {
     }
 
     /**
-     * @return
+     * Retrieve all the names of the files in trajectoryFileList for the app i.e. that have a particular extension
+     * <p>
+     *     This list is normally past called by the viewController specifically the recyclerView to display this list for selection
+     * </p>
+     * @return Array list of strings of all the filenames that have this particular extension
      */
     public ArrayList<String> getAllFilenames(){
         ArrayList<String> filenameList = new ArrayList<>();
@@ -46,6 +53,10 @@ public class TrajectoriesVisualizerController {
     }
 
     /**
+     * Retrieve all the files of interest from the persistence.
+     * <p>
+     *     These files are sorted based on their filename alphabetically reverse using a specific comparator
+     * </p>
      * @return
      */
     private File[] collectTrajectoryFiles() {
@@ -65,7 +76,12 @@ public class TrajectoriesVisualizerController {
     }
 
     /**
-     *
+     * Build the trajectoryList attribute by opening and extract the data from the files in trajectoryFileList
+     * <p>
+     *     This method uses another method called extractTrajectoryFromFile which uses the persistenceManager
+     *     to extract file information and then build trajectory objects which
+     *     are then added to trajectoryList in the order the files were in trajectoryFileList
+     * </p>
      */
     private void buildTrajectoryList() {
 
@@ -77,12 +93,16 @@ public class TrajectoriesVisualizerController {
                 trajectoryList.add(currentTrajectory);
             }
         }
-
     }
 
     /**
-     * @param file
-     * @return
+     * Build a particular trajectory object based on the data extracted from a file
+     * <p>
+     *     This method uses uses the persistenceManager  to extract file information and then builds
+     *     a trajectory object with this data to return
+     * </p>
+     * @param file File provided to extract data and build trajectory object
+     * @return Trajectory object containing extracted data
      */
     private Trajectory extractTrajectoryFromFile(File file) {
 
@@ -129,6 +149,11 @@ public class TrajectoriesVisualizerController {
     }
 
     /**
+     * Build and return a list of the Trajectory objects in trajectory list which are selected
+     * <p>
+     *     Selected means that their attribute isChecked is true.
+     *      This method checks every trajectory in trajectoryList and return those that match the criteria
+     * </p>
      * @return
      */
     public ArrayList<Trajectory> getSelectedTrajectories() {
@@ -144,7 +169,16 @@ public class TrajectoriesVisualizerController {
     }
 
     /**
-     * @return
+     * Delete the files which correspond to selected trajectories.
+     * <p>
+     *     This method operates by finding the trajectory objects with a isChecked true attribute and
+     *     then knowing their position in the list and their filename proceeds to select their file
+     *     from the trajectoryFileList attribute and use the delete method of File objects.
+     *     The deletion is confirmed or not in the provided object of the nested class FileDeletionResponse
+     * </p>
+     * @return FileDeletionResponse object containing a boolean informing of complete deletion but also two
+     * array lists one of the files deleted and another of the files unable to delete for possible purposes for now
+     * to inform the result of the operation through a toast
      */
     public FileDeletionResponse deleteSelectedFiles() {
 
@@ -154,7 +188,6 @@ public class TrajectoriesVisualizerController {
         for (int i = 0; i < trajectoryFileList.length; i++) {
             if(trajectoryList.get(i).isChecked()){
                 String currentFilename = trajectoryFileList[i].getName();
-                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EVALUATING FILE FOR DELETION: " + currentFilename);
                 if(trajectoryFileList[i].delete()){
                     deletedFiles.add(currentFilename);
                 } else {

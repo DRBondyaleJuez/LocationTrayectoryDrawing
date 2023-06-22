@@ -8,16 +8,12 @@ package controller.locationController;
 public interface LocationControllerObserver {
 
     /**
-     * @param currentLatitude
-     * @param currentLongitude
-     * @param currentAltitude
-     * @param currentSpeed
+     * Receive the parameters obtained from the device's GPS, store them and submit them to the viewController
+     * @param currentLatitude Double recently retrieve latitude
+     * @param currentLongitude Double recently retrieve longitude
+     * @param currentAltitude Double recently retrieve altitude
+     * @param currentSpeed Float recently retrieve speed
      */
     void setLocationParameters(double currentLatitude, double currentLongitude, Double currentAltitude, Float currentSpeed);
 
-    /**
-     * @param currentLatitude
-     * @param currentLongitude
-     */
-    void calculateAndSetDirection(double currentLatitude, double currentLongitude);
 }

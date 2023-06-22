@@ -46,7 +46,11 @@ public class LocationController implements LocationControllerObservable {
 
     /**
      * This is the constructor.
-     * @param activity
+     * <p>
+     *     A series of process are began. LocationRequest and LocationCallback are initialized to serve as parameters
+     *     of the getFusedLocationProviderClient which is also initialized.
+     * </p>
+     * @param activity Activity object associated with the app starting
      */
     public LocationController(Activity activity) {
         this.activity = activity;
@@ -57,7 +61,12 @@ public class LocationController implements LocationControllerObservable {
     }
 
     /**
-     *
+     * Update the GPS this means getting the GPS ready for the requests is going to respond so it is up to date.
+     * <p>
+     *     Apart from the update it also is responsible of requesting the user to turn on the GPS if
+     *     it is not on. It also verifies the permission to access location information is provided and if not
+     *     it requests it
+     * </p>
      */
     public void updateGPS() {
 
@@ -106,7 +115,7 @@ public class LocationController implements LocationControllerObservable {
     }
 
     /**
-     *
+     * Starts the looping request of location to the GPS
      */
     public void startContinuousLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -117,15 +126,23 @@ public class LocationController implements LocationControllerObservable {
     }
 
     /**
-     *
+     * Stops the looping request of location to the GPS
      */
     public void stopContinuousLocationUpdate() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-// --------------------------------------------------------------------------------------------------------
-// METHODS REQUIRE TO GET GPS LOCATION PARAMETERS BASED ON https://www.youtube.com/watch?v=dPqivAUK8ps
-    private LocationRequest createLocationRequest() {
+    // --------------------------------------------------------------------------------------------------------
+    // METHODS REQUIRED TO GET GPS LOCATION PARAMETERS BASED ON https://www.youtube.com/watch?v=dPqivAUK8ps
+
+    /**
+     * Create location request for the fusedLocationClient.
+     * <p>
+     *     This request has a series of parameter regarding the quality and frequency of the request
+     * </p>
+     * @return LocationRequest
+     */
+        private LocationRequest createLocationRequest() {
         return (new LocationRequest.Builder(
                 INTERVAL_MILLIS
         ).setGranularity(Granularity.GRANULARITY_FINE)
@@ -137,6 +154,13 @@ public class LocationController implements LocationControllerObservable {
          .build());
     }
 
+    /**
+     * Create location callback for the fusedLocationClient.
+     * <p>
+     *     This method calls the updateLocationInfo method which communicates with the observers
+     * </p>
+     * @return LocationCallback
+     */
     private LocationCallback createLocationCallback() {
         return new LocationCallback() {
             @Override
@@ -153,6 +177,11 @@ public class LocationController implements LocationControllerObservable {
         };
     }
 
+    /**
+     * Action trigger only called during the first update GPS not in loop request.
+     * It communicates with observers if successful
+     * @return OnSuccessListener
+     */
     private OnSuccessListener<Location> setOnSuccessListener() {
         return new OnSuccessListener<Location>() {
             @Override
@@ -183,11 +212,10 @@ public class LocationController implements LocationControllerObservable {
         //CALLING OBSERVERS
         for (LocationControllerObserver observer : observers) {
             observer.setLocationParameters(lat, lon, alt, speed);
-            observer.calculateAndSetDirection(lat,lon);
         }
     }
 
-    //implmentations of the abstract methods in the LocationControllerObservable interface
+    //Implementations of the abstract methods in the LocationControllerObservable interface
     @Override
     public void addObservers(LocationControllerObserver observer) {
         observers.add(observer);

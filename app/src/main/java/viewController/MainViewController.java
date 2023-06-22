@@ -159,9 +159,9 @@ public class MainViewController implements MainControllerObserver {
 
     /**
      * Set the response when clicking the button to go to the visualizer.
-     * This stops the previous processof tracking if active and changes the contentView by the activity
+     * This stops the previous process of tracking if active and changes the contentView by the activity
      * as well as initializing a TrajectoriesVisualizerViewController for this new view.
-     * @return
+     * @return View.OnClickListener necessary for the action
      */
     private View.OnClickListener setOnClickChangeView() {
         return new View.OnClickListener() {
@@ -177,7 +177,7 @@ public class MainViewController implements MainControllerObserver {
 
     /**
      * Set response triggered when the save button is clicked which indicates the controller to save the data
-     * @return
+     * @return View.OnClickListener necessary for the action
      */
     private View.OnClickListener setOnClickSaveData() {
 
@@ -192,7 +192,7 @@ public class MainViewController implements MainControllerObserver {
 
     /**
      * Set response triggered when the continuous location finder switch is changed
-     * @return
+     * @return View.OnClickListener necessary for the action
      */
     private View.OnClickListener setOnClickContinuousLocationFinder() {
         return new View.OnClickListener() {
@@ -208,7 +208,6 @@ public class MainViewController implements MainControllerObserver {
     /**
      * Communicated the continuous location finding starting or ending to the controller with a corresponding
      * display in the form of a toast in the app
-     * @return
      */
     private void continuousLocationSwitchChange() {
         if(continuousLocationSwitch.isChecked()) {

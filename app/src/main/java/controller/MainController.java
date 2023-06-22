@@ -19,7 +19,7 @@ import viewController.MainControllerObservable;
 import viewController.MainControllerObserver;
 
 /**
- * Provides the class that acts as a controller for the MainViewController in charge of providing
+ * Provides the class that acts as a controller for the MainViewController in charged of providing
  * logic, temporal storage of trajectory information, mediating between the persistence and the viewController.
  * It also communicates with two complementary classes to calculate directions and to retrieve directions from the
  * phones GPS system.
@@ -84,11 +84,6 @@ public class MainController implements LocationControllerObserver, MainControlle
         directions = new ArrayList<>();
 
         locationController.addObservers(this);
-    }
-
-
-    public void updateLocation() {
-        locationController.updateGPS();
     }
 
     /**
@@ -173,6 +168,9 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
         speeds.add(currentSpeed);
 
+        //CALL DIRECTIONS FINDER
+        calculateAndSetDirection(currentLatitude,currentLongitude);
+
         //LOCATION OPERATIONS
         if(bufferLatitudes.size() == BUFFER_SIZE_FOR_MEAN && bufferLongitudes.size() == BUFFER_SIZE_FOR_MEAN){
 
@@ -199,8 +197,17 @@ public class MainController implements LocationControllerObserver, MainControlle
         }
     }
 
-    @Override
-    public void calculateAndSetDirection(double currentLatitude, double currentLongitude){
+
+    /**
+     * Determine the direction based on the location tracked
+     * <p>
+     *     It employs a buffer that needs a particular number of locations to determine direction.
+     *     This methods initializes and uses a class called DirectionCalculator
+     * </p>
+     * @param currentLatitude double most recent latitude value
+     * @param currentLongitude double most recent longitude value
+     */
+    private void calculateAndSetDirection(double currentLatitude, double currentLongitude){
         double[] newLocation = {currentLatitude,currentLongitude};
         directionsBuffer.add(newLocation);
 
@@ -221,7 +228,6 @@ public class MainController implements LocationControllerObserver, MainControlle
             }
             directions.add(currentDirection);
             directionsBuffer.clear();
-            System.out.println("============================ Current Direction: " + currentDirection);
             sendDirectionInformation();
         }
     }
