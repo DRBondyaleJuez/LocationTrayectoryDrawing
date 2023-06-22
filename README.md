@@ -1,4 +1,4 @@
-# 🐶 🦴 💻 __LOCATION TRAJECTORY DRAWING__ 🛒 🐾 🐕
+# 📱 📍 🗺️ __LOCATION TRAJECTORY DRAWING__ 🎨 🖍️ 📉
 ## A simple android phone app that allows the visualization of line drawn based on the trajectory described by your location data (latitude and longitude) from the phone GPS
 ___
 
@@ -72,12 +72,13 @@ Application in use:
 ![App-Diagram](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/dbf42281-4f16-43d9-9941-69d178fcab7c)
 
 </div>
+
 ___
 ___
 
 
 
-## __PERSISTENCE __
+## __PERSISTENCE__
 
 The persistence manager class of the application stores the trajectory files in the directory accessed
 by the method openFileOutput of the Activity class. The path to this directory is: /data/user/0/com.locationtrayectorydrawing/files/
