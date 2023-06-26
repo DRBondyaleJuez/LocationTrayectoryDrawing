@@ -112,7 +112,7 @@ ___
 ### __For IDE:__
 <!-- OL -->
 1. Clone the repository in your local server
-2. Run the project's Main Class in your IDE. I used AndroidStudio
+2. Run the project's MainActivity in the com.locationtrayectorydrawing directory in your IDE. I used AndroidStudio
 3. (If desired to try in your Android phone) Run the program with your phone connected allowing developer actions to install the application.
 
 ___
