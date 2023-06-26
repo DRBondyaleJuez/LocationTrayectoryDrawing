@@ -27,8 +27,7 @@ When the single continuous tracking trajectory is displayed it changes color alo
 
 <div style="text-align: center;">
 
-![App-Diagram](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/dbf42281-4f16-43d9-9941-69d178fcab7c)
-
+![App-Diagram](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/ce8f96fa-9159-4e0e-bc24-bd4fa3eb33d0)
 </div>
 
 ## __Navigation between Views:__
@@ -37,8 +36,7 @@ This images show how user interactions with the view might work:
 
 <div style="text-align: center;">
 
-![GPS and permission view](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/581e5ea8-c5d9-4514-91db-4965231b6d76)
-
+![GPS and permission view](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/f95f19dd-68ce-4a6a-ac3a-418c269b073c)
 </div>
 
 Image of the phone screen when the app is turned on without GPS location active and image of the phone screen when the app is turn on without permission to access location information
@@ -47,8 +45,7 @@ After accepting these two windows the MainView is shown.
 
 <div style="text-align: center;">
 
-![MainView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/ca91d7e8-627d-4b9f-897b-e471ba774717)
-
+![MainView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/c74261b4-d5a8-44fe-9a1f-086dde99db91)
 </div>
 
 Image of the phone screen of the MainView before turning on the continuous tracking and after some considerable amount of time tracking and drawing.
@@ -58,8 +55,7 @@ You can switch to the other view of the app, as explained in the image, to the f
 
 <div style="text-align: center;">
 
-![VisualizerView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/8a928e4a-0a20-4b92-9ff9-9eb00d0fef54)
-
+![VisualizerView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/877cfd0c-c16e-486a-97ea-2a5d282aecf1)
 </div>
 Image of the phone screen of the TrajectoriesVisualizerView displaying some of the trajectories.
 Sections and interactive elements of the screen are defined.
