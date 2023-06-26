@@ -38,6 +38,7 @@ This images show how user interactions with the view might work:
 <div style="text-align: center;">
 
 ![GPS and permission view](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/581e5ea8-c5d9-4514-91db-4965231b6d76)
+
 </div>
 
 Image of the phone screen when the app is turned on without GPS location active and image of the phone screen when the app is turn on without permission to access location information
@@ -47,6 +48,7 @@ After accepting these two windows the MainView is shown.
 <div style="text-align: center;">
 
 ![MainView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/ca91d7e8-627d-4b9f-897b-e471ba774717)
+
 </div>
 
 Image of the phone screen of the MainView before turning on the continuous tracking and after some considerable amount of time tracking and drawing.
@@ -57,6 +59,7 @@ You can switch to the other view of the app, as explained in the image, to the f
 <div style="text-align: center;">
 
 ![VisualizerView Explained](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/8a928e4a-0a20-4b92-9ff9-9eb00d0fef54)
+
 </div>
 Image of the phone screen of the TrajectoriesVisualizerView displaying some of the trajectories.
 Sections and interactive elements of the screen are defined.
