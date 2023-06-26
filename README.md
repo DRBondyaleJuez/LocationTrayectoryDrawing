@@ -62,6 +62,8 @@ Sections and interactive elements of the screen are defined.
 
 Several toast serve to communicate with the user if the interaction has been successful.
 
+---
+
 Application in use:
 
 <div style="text-align: center;">
@@ -91,10 +93,11 @@ To use the phones location tracking it use the following dependency: 'com.google
 
 It requires the following permissions:
 <!-- OL -->
-- <uses-permission android:name="android.permission.INTERNET"/>
-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+   ```bash 
+   - <uses-permission android:name="android.permission.INTERNET"/>
+   - <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+   - <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+   ```
 ___
 ___
 
