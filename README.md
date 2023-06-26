@@ -25,8 +25,6 @@ During the display of more than one stored trajectory each one will have assigne
 
 When the single continuous tracking trajectory is displayed it changes color along the route having the line changing hue from beginning to end.
 
-To use the phones location tracking it use the following dependency: 'com.google.android.gms:play-services-location:21.0.1'
-
 <div style="text-align: center;">
 
 ![App-Diagram](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/dbf42281-4f16-43d9-9941-69d178fcab7c)
@@ -69,14 +67,12 @@ Application in use:
 
 <div style="text-align: center;">
 
-![App-Diagram](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/dbf42281-4f16-43d9-9941-69d178fcab7c)
+![Gif Location Drawing](https://github.com/DRBondyaleJuez/LocationTrayectoryDrawing/assets/98281752/89f4d68f-79e1-4b70-b1b1-eac984ca4a20)
 
 </div>
 
 ___
 ___
-
-
 
 ## __PERSISTENCE__
 
@@ -90,80 +86,37 @@ The filename created during saving follows this format based on the date and tim
 ___
 ___
 
+## __DEPENDENCIES AND PERMISSIONS__
+
+To use the phones location tracking it use the following dependency: 'com.google.android.gms:play-services-location:21.0.1'
+
+It requires the following permissions:
+<!-- OL -->
+- <uses-permission android:name="android.permission.INTERNET"/>
+- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+___
+___
+
+## __KNOWN ISSUES__
+
+The direction calculations based on the locations and the display need to be fine-tuned and tested to
+work properly. Currently it only displays STOP symbol.
+___
+___
 
 ## __INSTALLATION INSTRUCTIONS__
 ### __For IDE:__
 <!-- OL -->
 1. Clone the repository in your local server
-2. Run the project's Main Class in your IDE
-
-### __For Ubuntu (In terminal):__
-<!-- OL -->
-1. If necessary [install java version 11 or higher](https://stackoverflow.com/questions/52504825/how-to-install-jdk-11-under-ubuntu)
-
-    ```bash
-        sudo apt-get install openjdk-11-jdk
-    ```
-
-
-2. If necessary [install maven version 3.6.3 or higher](https://phoenixnap.com/kb/install-maven-on-ubuntu)
-
-   ```bash 
-       sudo apt install maven
-   ``` 
-
-3. If necessary [install git](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-20-04)
-
-   ```bash 
-       apt install git
-   ```
-
-4. Clone the repository
-
-   ```bash 
-       git clone https://github.com/DRBondyaleJuez/ThePetShopApp.git
-   ```
-
-5. Go to the project folder. Make sure the [pom.xml](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) is there.
-
-6. Create [.jar file](https://en.wikipedia.org/wiki/JAR_(file_format)) executable in target folder using the following code:
-
-    ```bash
-        mvn install 
-    ```
-   in case tests are giving trouble, this can be used to install without tests. However, it is not recommended.
-   ```bash
-        mvn package -Dmaven.test.skip
-    ```
-
-7. Build the database and tables needed for this application's persistence. Follow the recommendations in the resources.RelationalDatabaseSchema which describes the code in PostgreSQL.
-   ([Help creating your first database in pgAdmin](https://www.tutorialsteacher.com/postgresql/create-database))
-
-
-8. Fill in the parameters needed in the secrets.properties for access to the PostgreSQL database and for the encryption
-
-   These are:
-    <!-- OL -->
-    - <ins>*DBUser*</ins>  (String username of the database software)
-    - <ins>*DBPassword*</ins>  (String password of the database)
-    - <ins>*encryptionKey*</ins>  (String a key for the encryption)
-    - <ins>*saltSize*</ins>  (int the size of the desired salt)
-    - <ins>*initialSubstringPositionForTransposition*</ins>  (int related to the transposition during the encryption. It should __not__ be 0, 1 or larger than half the encryption key size)
-
-   Make sure the PropertiesReader boots the properties from the secrets.properties file
-
-9. This code uses javafx FXML, so we recommend the use of the following code  to run the program :
-
-   ([*Source*](https://github.com/openjfx/javafx-maven-plugin))
-
-    ```bash 
-        mvn javafx:run
-    ```
+2. Run the project's Main Class in your IDE. I used AndroidStudio
+3. (If desired to try in your Android phone) Run the program with your phone connected allowing developer actions to install the application.
 
 ___
 ___
 ## __INSTRUCTIONS FOR CONTRIBUTORS__
-The objective of the project was to practice and apply java knowledge. No further contributions will be needed all of this is just a training excercise.
+The objective of the project was to practice and apply java knowledge and android app development. No further contributions will be needed all of this is just a training exercise.
 
 Hope you may find the code useful and please acknowledge its origin and authorship if used for any other purpose.
 
